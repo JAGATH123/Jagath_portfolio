@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JAGATHGURU JAGADEESAN — Software Developer</title>
+<meta name="description" content="Jagathguru Jagadeesan — software developer. Built the internal platform at Lab of Future: fifteen services behind one registry. Now an M.Sc. student at Universität Siegen, open to Werkstudent roles in Germany.">
+<meta name="author" content="Jagathguru Jagadeesan">
+<meta name="theme-color" content="#04101f">
+<link rel="canonical" href="https://jagath123.github.io/Jagath_portfolio/">
+
+<!-- Open Graph / social cards -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JAGATHGURU">
+<meta property="og:title" content="JAGATHGURU — Software Developer">
+<meta property="og:description" content="They asked for a dashboard. I built the system under it. Nobody noticed — that was the point.">
+<meta property="og:url" content="https://jagath123.github.io/Jagath_portfolio/">
+<meta property="og:image" content="https://jagath123.github.io/Jagath_portfolio/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JAGATHGURU — Software Developer">
+<meta name="twitter:description" content="Platform and backend systems. M.Sc. at Universität Siegen — open to Werkstudent roles.">
+<meta name="twitter:image" content="https://jagath123.github.io/Jagath_portfolio/assets/img/og.png">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Two requests, deliberately. &text= is REQUEST-GLOBAL in the CSS2 API, so putting
+     it on a combined request subsets EVERY family in that request. It previously left
+     Chakra Petch and Space Mono with zero Latin coverage. Latin here, kana below. -->
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&amp;display=swap&amp;text=%E3%81%84%E3%81%8F%E3%81%93%E3%81%A4%E3%81%A6%E3%81%AB%E3%82%8C%E3%82%A2%E3%82%A4%E3%82%A6%E3%82%A9%E3%82%AA%E3%82%AF%E3%82%B1%E3%82%B3%E3%82%B5%E3%82%B7%E3%82%B8%E3%82%B9%E3%82%BB%E3%82%BF%E3%83%83%E3%83%86%E3%83%87%E3%83%88%E3%83%89%E3%83%8B%E3%83%8E%E3%83%91%E3%83%93%E3%83%95%E3%83%99%E3%83%9D%E3%83%A0%E3%83%A1%E3%83%A5%E3%83%A7%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AD%E3%83%B3%E3%83%BC%E8%A1%8C" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Person",
+  "name":"JAGATHGURU JAGADEESAN",
+  "alternateName":"JAGATHGURU",
+  "jobTitle":"Software Developer",
+  "url":"https://jagath123.github.io/Jagath_portfolio/",
+  "email":"mailto:jagathguru134@gmail.com",
+  "sameAs":[
+    "https://github.com/JAGATH123",
+    "https://www.linkedin.com/in/jagath-guru-ab2294228/"
+  ],
+  "knowsAbout":["Python","FastAPI","Next.js","React","TypeScript","GSAP","Docker","PostgreSQL","Computer Vision","Automation"],
+  "address":{"@type":"PostalAddress","addressCountry":"DE","addressLocality":"Siegen"}
+}
+</script>
+<noscript>
+<style>
+  /* No JS: unwind the fixed HUD shell into a plain scrolling document. */
+  body{overflow:auto;}
+  #root{position:static;overflow:visible;}
+  #bg,.wordmark-wrap,.fx,.rail,.tel,.glitch,.proj__caret{display:none !important;}
+  .main{position:static;}
+  .hdr,.ftr{position:static;}
+  .screen{position:static;visibility:visible;opacity:1;display:block;
+          padding:40px 20px;border-bottom:1px solid rgba(255,255,255,.14);}
+  .screen > *{margin:0 auto;}
+  .case,.case[hidden]{display:grid !important;}
+  .home{flex-direction:column;align-items:flex-start;}
+</style>
+</noscript>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div id="root" data-screen="home">
+
+  <!-- ══════════════ BACKDROP ══════════════ -->
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <div class="wordmark-wrap" aria-hidden="true">
+    <div class="wordmark">HOME</div>
+    <div class="wordmark wordmark--b">HOME</div>
+  </div>
+
+  <div class="fx fx--scrim" aria-hidden="true"></div>
+  <div class="fx fx--lines" aria-hidden="true"></div>
+  <div class="fx fx--scan" aria-hidden="true"></div>
+  <svg class="fx fx--grain" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter>
+    <rect width="100%" height="100%" filter="url(#noise)"/>
+  </svg>
+  <div class="fx fx--vignette" aria-hidden="true"></div>
+  <div class="fx fx--chrome-top" aria-hidden="true"></div>
+  <div class="fx fx--chrome-bot" aria-hidden="true"></div>
+
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header class="hdr">
+    <div class="hdr__left">
+      <a class="brand" href="#home" aria-label="JAGATHGURU — home">
+        <span class="brand__hex">D0</span>
+        <span class="brand__word">DATUM<br>LINE</span>
+      </a>
+      <div class="hire">
+        <span class="jp">パートタイム</span>
+        <a class="btn btn--hire" href="#info">
+          <span class="btn__hazard" aria-hidden="true"></span>
+          Available <span class="btn__caret" aria-hidden="true">◀</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hdr__right">
+      <nav class="nav" aria-label="Primary">
+        <a class="tab" href="#home" data-nav="home"><span class="jp">これ</span><span class="tab__box"><span class="tab__t">\home</span></span></a>
+        <a class="tab" href="#about" data-nav="about"><span class="jp">について</span><span class="tab__box"><span class="tab__t">\about</span></span></a>
+        <a class="tab" href="#work" data-nav="work"><span class="jp">ポートフォリオ</span><span class="tab__box"><span class="tab__t">\work</span></span></a>
+        <a class="tab" href="#info" data-nav="info"><span class="jp">コンタクト</span><span class="tab__box"><span class="tab__t">\info</span></span></a>
+      </nav>
+      <div class="nav__cap">▶ site-wide//menu system&nbsp;&nbsp;<span class="chip jp">メニューシステム</span></div>
+    </div>
+  </header>
+
+  <!-- ══════════════ LEFT RAIL ══════════════ -->
+  <aside class="rail rail--l" aria-hidden="true">
+    <div class="rail__grp">
+      <div class="pixgrid"><i></i><i class="o"></i><i></i><i class="e"></i><i class="e"></i><i></i><i class="e"></i><i></i><i></i><i class="e"></i><i class="o"></i><i class="e"></i></div>
+      <div class="barcode-row">
+        <div class="barcode"></div>
+        <div class="vnum">6653 931 3656562 53 2</div>
+      </div>
+      <div class="glyphbox">◁▶</div>
+    </div>
+    <div class="rail__grp rail__grp--end">
+      <div class="dashline"></div>
+      <span class="tri pulse">▽</span>
+      <span class="tri dim">▽</span>
+    </div>
+  </aside>
+
+  <!-- ══════════════ RIGHT RAIL ══════════════ -->
+  <aside class="rail rail--r" aria-hidden="true">
+    <div class="vstack">
+      <div class="vnum jp sm">データム／00</div>
+      <div class="vword">DATUM LINE — 00</div>
+    </div>
+    <div class="rail__grp rail__grp--mid">
+      <div class="chamfer-sq">▲</div>
+      <div class="dashline sm"></div>
+      <div class="pill pulse"></div>
+    </div>
+    <div class="rail__grp rail__grp--end r">
+      <div class="jp sm">WEB‑サイト</div>
+      <div class="hatch"></div>
+      <span class="tri">▽</span>
+    </div>
+  </aside>
+
+  <!-- ══════════════ MAIN ══════════════ -->
+  <main id="main" class="main">
+
+    <!-- ─── HOME ─── -->
+    <section class="screen" id="home" data-grade="coolant" data-active aria-labelledby="home-h">
+      <div class="home">
+        <div class="home__copy">
+          <p class="eyebrow">▶ INDEX // 001 — SYSTEM ONLINE</p>
+          <h1 id="home-h" class="display display--xl ca">JAGATHGURU</h1>
+          <p class="rolerow">
+            <span class="role">SOFTWARE DEVELOPER</span>
+            <span class="role__sub">BACKEND &amp; FULL‑STACK SYSTEMS</span>
+          </p>
+          <p class="slab-lines">
+            <span class="slab ca">You're welcome to poke</span>
+            <span class="slab ca">around in my code.</span>
+          </p>
+          <p class="lede">I build the fast, resilient, slightly over‑engineered systems you never think about, precisely because they just work.</p>
+          <div class="ctarow">
+            <a class="btn btn--solid" href="#info">INITIATE CONTACT <span aria-hidden="true">▶</span></a>
+            <a class="btn btn--ghost" href="#work">VIEW BUILDS</a>
+            <span class="status"><span class="dot blink" aria-hidden="true"></span>OPEN TO WERKSTUDENT ROLES &middot; GERMANY</span>
+          </div>
+        </div>
+
+        <figure class="feed">
+          <figcaption class="feed__cap"><span>▪ VISUAL_FEED</span><span class="jp">ビジュアル</span></figcaption>
+          <div class="feed__frame">
+            <picture>
+              <source srcset="assets/img/jagathguru-jagadeesan.webp" type="image/webp">
+              <img src="assets/img/jagathguru-jagadeesan.jpg" alt="JAGATHGURU JAGADEESAN" width="864" height="1080" loading="eager" decoding="async">
+            </picture>
+            <span class="feed__grad" aria-hidden="true"></span>
+            <span class="feed__scan" aria-hidden="true"></span>
+            <span class="crn crn--tl" aria-hidden="true"></span>
+            <span class="crn crn--tr" aria-hidden="true"></span>
+            <span class="crn crn--bl" aria-hidden="true"></span>
+            <span class="feed__rec" aria-hidden="true"><span class="dot blink"></span>REC</span>
+          </div>
+          <div class="feed__meta"><span>IMG // JAGATHGURU</span><span>DATUM LINE</span></div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ─── ABOUT ─── -->
+    <section class="screen" id="about" data-grade="ember" aria-labelledby="about-h">
+      <div class="about">
+
+        <!-- 1. the line. nothing else on first view. -->
+        <div class="hook">
+          <p class="eyebrow">&#9642; WHO</p>
+          <h2 id="about-h" class="slab-lines">
+            <span class="slab ca">They asked for a dashboard.</span>
+            <span class="slab ca">I built the system under it.</span>
+            <span class="slab ca">Nobody noticed.</span>
+            <span class="slab ca">That was the point.</span>
+          </h2>
+          <p class="cue" aria-hidden="true">&#9662; keep reading</p>
+        </div>
+
+        <!-- 2. scroll: it unpacks itself -->
+        <div class="elab">
+          <p>The dashboard was the ask. What it needed was a registry &mdash; fifteen internal
+          services that had grown up separately, different owners, different auth, and no shared
+          answer to <em>what exists, and can I use it.</em></p>
+
+          <p>So the shell owns nothing. Each service declares itself and the console renders from
+          that. Adding one is a manifest entry, not a pull request. When a service goes down it
+          renders as unavailable instead of taking the console down with it.</p>
+
+          <p class="elab__kick">Fourteen months. One developer. The most useful thing I built is
+          the part you cannot see.</p>
+        </div>
+
+        <!-- 3. scroll: who, and what next -->
+        <div class="ident">
+          <p class="eyebrow">&#9642; AND</p>
+          <p class="ident__lead">I'm Jagathguru Jagadeesan. I write the load&#8209;bearing half &mdash;
+          the container, the queue, the approval gate, the consent screen &mdash; and then put it
+          somewhere people who are not engineers have to use it every day.</p>
+
+          <p class="ident__body">I'm in Siegen doing a Masters because I shipped fifteen modules
+          before I could derive half of them. I would like to be able to derive them.</p>
+
+          <blockquote class="creed">
+            <p>Don't shrink your vision to today's toolbox.<br>Upgrade the tools to match your dreams.</p>
+          </blockquote>
+
+          <p class="ident__next"><span>NEXT</span>Systems where the model is a component, not the product.</p>
+
+          <dl class="statline">
+            <div><dt>BUILT</dt><dd>Internal platform &mdash; 14 months, solo</dd></div>
+            <div><dt>NOW</dt><dd>M.Sc. &mdash; Universit&auml;t Siegen</dd></div>
+            <div><dt>BASE</dt><dd>Remote &mdash; currently Siegen, DE</dd></div>
+          </dl>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── WORK ─── -->
+    <section class="screen" id="work" data-grade="iris" aria-labelledby="work-h">
+      <div class="work">
+        <p class="eyebrow">▶ PORTFOLIO // SELECTED BUILDS</p>
+        <h2 id="work-h" class="display display--lg ca">WORK</h2>
+        <div class="projects">
+
+          <article class="proj">
+            <button class="proj__btn" aria-expanded="false" aria-controls="case-1">
+              <span class="proj__num">001</span>
+              <span class="proj__id">
+                <span class="proj__name">COODU AI</span>
+                <span class="proj__line">India-first AI company. Built the whole front door before the first model shipped.</span>
+              </span>
+              <span class="proj__meta">Next.js · GSAP<br><span>2026</span></span>
+              <span class="proj__caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="case" id="case-1" hidden>
+              <div><h3>▪ PROBLEM</h3><p>A brand-new AI company with no public presence, no narrative, and a founder-shaped bottleneck on everything.</p></div>
+              <div><h3>▪ APPROACH</h3><p>Next.js + GSAP marketing site with a scroll-driven story, plus a structured founder knowledge base for vision, roadmap and pillar docs.</p></div>
+              <div class="case__out">
+                <h3>▪ STATUS</h3>
+                <p class="metric metric--word">IN BUILD</p>
+                <p class="metric__lbl">SITE COMPLETE · PRE-DEPLOY</p>
+                <a class="btn btn--mini" href="#info">ENQUIRE <span aria-hidden="true">▶</span></a>
+              </div>
+            </div>
+          </article>
+
+          <article class="proj">
+            <button class="proj__btn" aria-expanded="false" aria-controls="case-2">
+              <span class="proj__num">002</span>
+              <span class="proj__id">
+                <span class="proj__name">HELM</span>
+                <span class="proj__line">A business operating system. Six modules that refuse to be six spreadsheets.</span>
+              </span>
+              <span class="proj__meta">FastAPI · Docker<br><span>2026</span></span>
+              <span class="proj__caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="case" id="case-2" hidden>
+              <div><h3>▪ PROBLEM</h3><p>Small businesses run on a dozen disconnected sheets and WhatsApp threads. Nothing reconciles, nothing is auditable.</p></div>
+              <div><h3>▪ APPROACH</h3><p>One FastAPI backend, six domain modules behind a shared auth and data layer, containerised with Docker for one-command deploy.</p></div>
+              <div class="case__out">
+                <h3>▪ OUTCOME</h3>
+                <p class="metric">6</p>
+                <p class="metric__lbl">MODULES SHIPPED &amp; DOCKERISED</p>
+                <a class="btn btn--mini" href="#info">ENQUIRE <span aria-hidden="true">▶</span></a>
+              </div>
+            </div>
+          </article>
+
+          <article class="proj">
+            <button class="proj__btn" aria-expanded="false" aria-controls="case-3">
+              <span class="proj__num">003</span>
+              <span class="proj__id">
+                <span class="proj__name">HERALD</span>
+                <span class="proj__line">Email in, WhatsApp out. A concierge that reads your inbox so you don't have to.</span>
+              </span>
+              <span class="proj__meta">Python · WhatsApp API<br><span>2026</span></span>
+              <span class="proj__caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="case" id="case-3" hidden>
+              <div><h3>▪ PROBLEM</h3><p>The important email always arrives while you're nowhere near an inbox — and buried under forty that aren't.</p></div>
+              <div><h3>▪ APPROACH</h3><p>Python service that ingests mail, classifies and summarises it, then pushes only what matters to WhatsApp as an actionable thread.</p></div>
+              <div class="case__out">
+                <h3>▪ STATUS</h3>
+                <p class="metric metric--word">CODE‑COMPLETE</p>
+                <p class="metric__lbl">AWAITING PRODUCTION KEYS</p>
+                <a class="btn btn--mini" href="#info">ENQUIRE <span aria-hidden="true">▶</span></a>
+              </div>
+            </div>
+          </article>
+
+          <article class="proj">
+            <button class="proj__btn" aria-expanded="false" aria-controls="case-4">
+              <span class="proj__num">004</span>
+              <span class="proj__id">
+                <span class="proj__name">SITE ATTENDANCE</span>
+                <span class="proj__line">Face-recognition attendance for real construction sites. Dust, glare and all.</span>
+              </span>
+              <span class="proj__meta">Python · OpenCV<br><span>2026</span></span>
+              <span class="proj__caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="case" id="case-4" hidden>
+              <div><h3>▪ PROBLEM</h3><p>Paper muster rolls on remote sites: unverifiable, slow to reconcile, and trivially gamed.</p></div>
+              <div><h3>▪ APPROACH</h3><p>On-site face onboarding and 1:N matching pipeline with a supervisor review step, built to survive bad light and worse networks.</p></div>
+              <div class="case__out">
+                <h3>▪ OUTCOME</h3>
+                <p class="metric metric--word">1:N</p>
+                <p class="metric__lbl">FACE MATCHING, OFFLINE-TOLERANT</p>
+                <a class="btn btn--mini" href="#info">ENQUIRE <span aria-hidden="true">▶</span></a>
+              </div>
+            </div>
+          </article>
+
+          <article class="proj">
+            <button class="proj__btn" aria-expanded="false" aria-controls="case-5">
+              <span class="proj__num">005</span>
+              <span class="proj__id">
+                <span class="proj__name">COODU TRUST</span>
+                <span class="proj__line">A donation platform where the money actually has to arrive.</span>
+              </span>
+              <span class="proj__meta">JS · Payments · cPanel<br><span>2026</span></span>
+              <span class="proj__caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="case" id="case-5" hidden>
+              <div><h3>▪ PROBLEM</h3><p>Non-profit donation flows break in the least forgiving place possible: at the payment step, on a stranger's phone.</p></div>
+              <div><h3>▪ APPROACH</h3><p>Rebuilt the front end and hardened the donation path end to end — environment-driven endpoints, no hardcoded hosts, deployable on shared hosting.</p></div>
+              <div class="case__out">
+                <h3>▪ STATUS</h3>
+                <p class="metric metric--word">ACTIVE</p>
+                <p class="metric__lbl">DESIGN REBUILD IN FLIGHT</p>
+                <a class="btn btn--mini" href="#info">ENQUIRE <span aria-hidden="true">▶</span></a>
+              </div>
+            </div>
+          </article>
+
+          <article class="proj">
+            <button class="proj__btn" aria-expanded="false" aria-controls="case-6">
+              <span class="proj__num">006</span>
+              <span class="proj__id">
+                <span class="proj__name">TOPROCK PORTAL</span>
+                <span class="proj__line">Turned a creative team's spreadsheet sprawl into a dashboard they'll open twice a day.</span>
+              </span>
+              <span class="proj__meta">Sheets API · JS<br><span>2025</span></span>
+              <span class="proj__caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="case" id="case-6" hidden>
+              <div><h3>▪ PROBLEM</h3><p>Creative pipeline status lived in a Google Sheet nobody trusted and everybody edited.</p></div>
+              <div><h3>▪ APPROACH</h3><p>Read-through dashboard on the Sheets API with OAuth, so the sheet stays the source of truth while the team gets a real interface.</p></div>
+              <div class="case__out">
+                <h3>▪ OUTCOME</h3>
+                <p class="metric metric--word">LIVE</p>
+                <p class="metric__lbl">TEAM DASHBOARD IN DAILY USE</p>
+                <a class="btn btn--mini" href="#info">ENQUIRE <span aria-hidden="true">▶</span></a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── INFO ─── -->
+    <section class="screen" id="info" data-grade="emerald" aria-labelledby="info-h">
+      <div class="info">
+        <h2 id="info-h" class="slab-lines slab-lines--c">
+          <span class="slab ca">Where I am changes.</span>
+          <span class="slab ca">Right now it is Siegen, Germany.</span>
+          <span class="slab ca">What doesn't change: the email</span>
+          <span class="slab ca">and the repo. Both are open.</span>
+        </h2>
+        <div class="contact">
+          <div><span class="contact__k">EMAIL</span><a class="contact__v" href="mailto:jagathguru134@gmail.com">jagathguru134@gmail.com</a></div>
+          <div><span class="contact__k">GITHUB</span><a class="contact__v" href="https://github.com/JAGATH123" rel="me noopener" target="_blank">@JAGATH123</a></div>
+          <div><span class="contact__k">LINKEDIN</span><a class="contact__v" href="https://www.linkedin.com/in/jagath-guru-ab2294228/" rel="me noopener" target="_blank">/in/jagath-guru</a></div>
+          <div><span class="contact__k">LOCATION</span><span class="contact__v">Remote — currently Siegen, DE</span></div>
+          <div><span class="contact__k">STATUS</span><span class="contact__v"><span class="dot blink" aria-hidden="true"></span>open to Werkstudent roles</span></div>
+          <!-- RESUME row: uncomment once assets/jagathguru-jagadeesan-cv.pdf exists.
+               Left out deliberately rather than shipping a 404.
+          <div><span class="contact__k">RESUME</span><a class="contact__v" href="assets/jagathguru-jagadeesan-cv.pdf" download>PDF &#8595;</a></div>
+          -->
+        </div>
+        <p class="info__note">▶ Email is the fastest route.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="ftr">
+    <div class="ftr__info">
+      <div>
+        <div class="ftr__k">▪ DEVELOPED BY</div>
+        <div class="ftr__v">JAGATHGURU</div>
+        <div class="jp sm">デベロッパー</div>
+      </div>
+      <div>
+        <div class="ftr__k">▪▪ LOCATION:</div>
+        <div class="ftr__v">Roaming &mdash; last known: Siegen, DE</div>
+        <div class="jp sm">ロケーション</div>
+      </div>
+    </div>
+
+    
+    <div class="ftr__act">
+      <div class="ftr__actcol">
+        <span class="jp sm">サウンド</span>
+        <button id="sound" class="btn btn--icon" aria-pressed="false" aria-label="Toggle interface sound">
+          <svg class="ico ico--off" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path d="M16 9l5 5M21 9l-5 5"/></svg>
+          <svg class="ico ico--on" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path d="M16 8.5a4 4 0 0 1 0 7"/><path d="M18.6 6a7 7 0 0 1 0 12"/></svg>
+        </button>
+      </div>
+      <div class="ftr__actcol r">
+        <span class="jp sm">コンタクト</span>
+        <a class="btn btn--contact" href="#info">Contact</a>
+      </div>
+      <div class="ftr__tech" aria-hidden="true">
+        <span class="jp sm">テクノロジー</span>
+        <span class="techhex"></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════ TELEMETRY ══════════════ -->
+  <div class="tel" aria-hidden="true">
+    <span class="tel__i"><span class="dot blink"></span><b>LIVE</b></span>
+    <span class="tel__i"><b>T</b> <span id="t-clock">--:--:--</span></span>
+    <span class="tel__i"><b>UP</b> <span id="t-up">00:00</span></span>
+    <span class="tel__i"><b>FPS</b> <span id="t-fps">60</span></span>
+    <span class="tel__i tel__i--grade"><b>GRADE</b> <span id="t-grade">—</span></span>
+  </div>
+
+  <div class="glitch" aria-hidden="true"><span class="glitch__flash"></span><span class="glitch__sweep"></span></div>
+</div>
+
+<script src="assets/js/scene.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

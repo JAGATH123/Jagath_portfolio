@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{{> partials/head.html }}
+{{> partials/noscript.html }}
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div id="root">
+
+{{> partials/backdrop.html }}
+
+{{> partials/header.html }}
+
+{{> partials/rails.html }}
+
+  <!-- ══════════════ MAIN ══════════════ -->
+  <main id="main" class="main">
+
+    <!-- ─── HOME ─── -->
+{{> sections/home.html }}
+
+    <!-- ─── ABOUT ─── -->
+{{> sections/about.html }}
+
+    <!-- ─── WORK ─── -->
+{{> sections/work.html }}
+
+    <!-- ─── INFO ─── -->
+{{> sections/contact.html }}
+
+  </main>
+
+{{> partials/footer.html }}
+</div>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

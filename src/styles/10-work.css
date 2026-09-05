@@ -1,0 +1,71 @@
+/* 10-work.css
+   Work screen only: .proj details/summary, .case panels, .metric. */
+
+/* ─────────── WORK ─────────── */
+.work{max-width:1120px;}
+/* WORK carries a six-item list, so it sits tighter to the chrome than
+   the other three screens. This was #work — the file's only ID selector
+   and a pure style hook, which had already drifted 4px out of sync with
+   --hdr-h at the 460px breakpoint. It is a class now, and at ≤820 it
+   goes back to reading the tokens so it cannot drift again. */
+.screen--work{padding-block:106px 94px;}
+
+.projects{display:flex;flex-direction:column;gap:7px;}
+
+/* The accordion is native: <details class="proj" name="proj">. The
+   shared `name` makes the group exclusive, which is what the old JS did
+   by hand, and there is no .case[hidden] rule any more because the
+   element handles its own visibility. */
+.proj{display:flex;flex-direction:column;}
+
+.proj__btn{
+  width:100%;text-align:left;cursor:pointer;list-style:none;
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  display:grid;grid-template-columns:66px 1fr auto 18px;align-items:center;gap:20px;
+  padding:11px 22px;
+  /* 1.4.11. This hairline is the ONLY boundary these six controls have
+     at rest. rgba(255,255,255,.18) measured 1.61:1 against the panel it
+     sits on. .38 measures ~3.5:1 over the darkest backdrop the canvas
+     produces and ~3.1:1 over the brightest, so it clears 3:1 across the
+     whole drift cycle and all four grades. */
+  border:1px solid rgba(255,255,255,.38);background:rgba(6,8,14,.62);
+  transition:border-color .18s ease,background .18s ease,transform .18s ease;
+  clip-path:polygon(0 0,100% 0,100% 70%,99% 100%,1% 100%,0 58%);
+}
+/* summary carries a disclosure triangle in its marker box. display:grid
+   already drops it in modern engines; these two cover the rest. */
+.proj__btn::-webkit-details-marker{display:none;}
+.proj__btn::marker{content:"";}
+
+.proj__btn:hover,.proj__btn:focus-visible{border-color:var(--accent);background:rgba(255,255,255,.07);transform:translateX(7px);}
+/* open state: bind the summary to the panel it opened. */
+.proj[open] .proj__btn{border-color:var(--accent);}
+
+.proj__num{font-family:var(--disp);font-weight:700;font-size:22px;color:var(--accent);}
+/* .proj__id is the <h3> that carries the per-project heading inside the
+   summary. Its UA bold would otherwise inherit straight into
+   .proj__line, which declares no weight of its own. */
+.proj__id{font:inherit;}
+.proj__name{display:block;font-family:var(--disp);font-weight:600;font-size:clamp(17px,2.2vw,28px);letter-spacing:.01em;}
+.proj__line{display:block;font-family:var(--mono);font-size:12.5px;color:rgba(255,255,255,.72);margin-top:3px;}
+.proj__meta{text-align:right;font-family:var(--mono);font-size:12px;color:var(--accent);}
+.proj__meta span{color:rgba(255,255,255,.68);}
+.proj__caret{font-size:13px;color:var(--accent);transition:transform .2s ease;}
+.proj[open] .proj__caret{transform:rotate(180deg);}
+
+.case{
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  display:grid;grid-template-columns:1.1fr 1.1fr .9fr;gap:22px;
+  padding:18px 24px 20px;margin-top:-1px;
+  border:1px solid var(--accent);background:rgba(6,8,14,.66);
+  clip-path:polygon(0 0,100% 0,100% 86%,98.5% 100%,1.5% 100%,0 86%);
+  animation:caseIn .28s cubic-bezier(.2,.8,.2,1) both;
+}
+.case h4{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.2em;color:var(--accent);margin-bottom:7px;}
+.case p{font-family:var(--mono);font-size:13px;line-height:1.6;color:rgba(255,255,255,.78);}
+.case__out{display:flex;flex-direction:column;align-items:flex-start;}
+/* text-shadow for .metric lives with .ca, in SHARED */
+.metric{font-family:var(--disp);font-weight:700;font-size:42px;line-height:1;color:var(--accent);}
+.metric--word{font-size:26px;letter-spacing:.02em;}
+.metric__lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.7);margin-top:4px;}
+.case__out .btn{margin-top:12px;}

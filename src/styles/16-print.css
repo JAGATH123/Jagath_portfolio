@@ -1,0 +1,72 @@
+/* 16-print.css
+   Print. Browsers drop background graphics, so colours are re-pointed. */
+
+/* ═══════════════════ 12. PRINT ═══════════════════
+   On screen this is a fixed single-viewport HUD: body{overflow:hidden},
+   #root{position:fixed}, and three of the four screens parked at
+   visibility:hidden. Sent to a printer as-is, that is one clipped page
+   carrying a quarter of the content. This unwinds the shell into a
+   plain light document, top to bottom, all four sections.
+   The <noscript> block in index.html solves the same problem for the
+   same reason and these are largely the same declarations; the colour
+   work is the part a printer additionally needs, since browsers drop
+   background graphics by default and white-on-dark then prints as
+   white-on-white. */
+
+@media print{
+  @page{margin:14mm;}
+
+  body{overflow:visible;background:#fff;color:#000;}
+  #root{position:static;overflow:visible;background:#fff;max-width:none;}
+
+  /* decoration, or wholly dependent on the fixed shell */
+  #bg,.wordmark-wrap,.fx,.rail,.tel,.glitch,.glitch.on,.skip,
+  .nav,.nav__cap,.hire,.ftr__act,.feed__rec,.cue,.proj__caret,
+  .brand__hex,.btn__hazard,.techhex,.dot{display:none;}
+
+  .main,.hdr,.ftr{position:static;}
+  .hdr{padding:0 0 10px;}
+  .ftr{padding:14px 0 0;border-top:1px solid #bbb;}
+
+  .screen{
+    position:static;visibility:visible;opacity:1;display:block;
+    overflow:visible;padding:0;margin:0 0 22px;
+  }
+  .screen + .screen{border-top:1px solid #bbb;padding-top:22px;}
+  .screen > *,.screen[data-active] > *{max-width:none;margin:0;animation:none;}
+  .home{display:block;}
+  .hook{min-height:0;}
+  .feed{width:46mm;float:right;margin:0 0 12px 14px;}
+
+  /* Ink. Every one of these is white or translucent white on screen. */
+  .display,.slab,.lede,.role__sub,.status,.proj__name,.proj__line,
+  .proj__meta span,.case p,.metric__lbl,.statline dd,.contact__v,
+  .info__note,.ftr__v,.elab p,.elab em,.ident__lead,.ident__body,
+  .ident__next,.creed{color:#111;text-shadow:none;}
+
+  /* Accent. --accent is a tint chosen for a black canvas and lands near
+     2:1 on paper. Re-point the COLOURS rather than the token: scene.js
+     writes --accent as an inline style on #root, and an inline custom
+     property cannot be beaten from a stylesheet without !important.
+     #0b4da2 is 8.1:1 on white. */
+  .eyebrow,.jp,.brand__word,.role,.contact__k,.statline dt,.ftr__k,
+  .proj__num,.proj__meta,.case h4,.metric,.ident__next span,
+  .feed__cap,.feed__meta,a,.btn,.contact__v--link{color:#0b4da2;text-shadow:none;}
+
+  /* anything whose legibility came from a filled background */
+  .slab,.role,.chip,.btn,.proj__btn,.case{background:none;clip-path:none;}
+  .slab,.role,.chip{padding:0;}
+  .btn{border-color:#0b4da2;}
+  .creed,.ident{border-color:#0b4da2;}
+  .creed{padding-right:0;}
+  .elab p.elab__kick{border-left-color:#0b4da2;}
+
+  /* Open every case study — a printed portfolio with five of six
+     collapsed is not a portfolio. Only lands in engines that expose
+     ::details-content; elsewhere the page prints whatever is open,
+     which is the same promise the accordion makes on screen. */
+  .proj::details-content{content-visibility:visible;block-size:auto;}
+  .proj{break-inside:avoid;}
+  .proj__btn{border-color:#999;backdrop-filter:none;-webkit-backdrop-filter:none;transform:none;}
+  .case{border:1px solid #999;backdrop-filter:none;-webkit-backdrop-filter:none;animation:none;grid-template-columns:1fr 1fr;}
+}

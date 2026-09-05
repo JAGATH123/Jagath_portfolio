@@ -1,3 +1,11 @@
 .DS_Store
 *.log
-node_modules/
+__pycache__/
+
+# Generated. Build it: make build
+dist/
+
+# Design-tool exports and the third-party reference captures they came with.
+# Kept locally; never published. archive/README.md says where they are.
+archive/*
+!archive/README.md

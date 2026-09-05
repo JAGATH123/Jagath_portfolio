@@ -1,0 +1,96 @@
+/* 06-header-rails.css
+   Header, nav tabs, brand, and the decorative HUD rails. */
+
+/* ═══════════════════ 6. HEADER + RAILS ═══════════════════ */
+
+/* pointer-events island: the bar spans the viewport so the canvas shows
+   through it, but only the two real clusters accept a cursor. */
+.hdr{
+  position:absolute;top:0;left:0;right:0;z-index:20;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:20px 24px;pointer-events:none;
+}
+.hdr__left,.hdr__right{pointer-events:auto;}
+.hdr__left{display:flex;align-items:center;gap:18px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand__hex{
+  width:46px;height:48px;background:var(--accent);color:var(--ink);
+  clip-path:polygon(50% 0,100% 26%,100% 74%,50% 100%,0 74%,0 26%);
+  display:flex;align-items:flex-start;justify-content:center;
+  font-family:var(--disp);font-weight:700;font-size:15px;
+}
+.brand__word{font-family:var(--disp);font-weight:700;font-size:19px;line-height:.9;color:var(--accent);letter-spacing:.06em;}
+.hire .jp{display:block;font-size:10px;margin-bottom:4px;}
+
+.hdr__right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.nav{display:flex;align-items:flex-start;gap:7px;}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;}
+.tab .jp{font-size:9px;opacity:.7;}
+.tab__box{
+  position:relative;display:inline-flex;align-items:center;
+  padding:7px 22px 10px;border:2px solid var(--accent);color:var(--accent);
+  font-family:var(--disp);font-weight:600;font-size:21px;
+  clip-path:polygon(11% 0,100% 0,100% 70%,92% 100%,0 100%,0 26%);
+  transition:background .16s ease;
+}
+.tab:hover .tab__box{background:rgba(255,255,255,.07);}
+.tab__box::before{content:"";position:absolute;inset:0;background:var(--accent);opacity:0;transition:opacity .2s ease;}
+.tab__t{position:relative;white-space:nowrap;}
+.nav__cap{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.06em;text-shadow:var(--sh-cap);}
+
+/* CURRENT PAGE. The old cue was a single accent wash at .30 opacity,
+   which measured 1.67–2.07:1 against a resting tab depending on the
+   grade, and was carried entirely by hue — it failed 1.4.11 for the
+   indicator and 1.4.1 for being colour-only. Now:
+     · the wash goes to .55        → 3.1–4.4:1 across all four grades
+     · the label inverts to #fff   → 4.4–6.2:1 ON that wash, which is
+                                      the reason the wash could not
+                                      simply be turned up on its own:
+                                      accent-on-accent falls apart
+     · a solid 4px bar underneath  → a SHAPE, present or absent, which
+                                      is what 1.4.1 actually asks for,
+                                      and 8.5:1 on its own
+   font-weight was considered as a second non-chromatic cue and rejected:
+   it changes the advance width, and at the 460px breakpoint .tab__box is
+   down to 1px of horizontal padding with nothing to give. */
+.tab[aria-current="page"] .tab__box::before{opacity:.55;}
+.tab[aria-current="page"] .tab__box{
+  color:#fff;
+  box-shadow:0 0 0 1px var(--accent),0 0 22px -6px var(--accent);
+}
+.tab[aria-current="page"] .tab__box::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:4px;
+  background:var(--accent);
+}
+
+/* ── decorative rails ── */
+.rail{
+  position:absolute;top:118px;bottom:112px;z-index:15;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:space-between;
+  color:var(--accent);
+}
+.rail--l{left:16px;width:82px;align-items:flex-start;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9));}
+.rail--r{right:16px;width:74px;align-items:flex-end;text-align:right;filter:drop-shadow(0 1px 3px rgba(0,0,0,.9));}
+.rail__grp{display:flex;flex-direction:column;gap:14px;}
+.rail__grp--end{align-items:flex-start;gap:10px;}
+.rail__grp--end.r{align-items:flex-end;gap:8px;}
+.rail__grp--mid{align-items:flex-end;gap:12px;}
+
+.pixgrid{display:grid;grid-template-columns:repeat(4,7px);gap:2px;}
+.pixgrid i{width:7px;height:7px;background:var(--accent);}
+.pixgrid i.o{background:none;border:1px solid var(--accent);}
+.pixgrid i.e{background:none;}
+.barcode-row{display:flex;align-items:flex-start;gap:6px;}
+.barcode{width:24px;height:120px;background:repeating-linear-gradient(90deg,var(--accent) 0 2px,transparent 2px 4px,var(--accent) 4px 5px,transparent 5px 8px,var(--accent) 8px 11px,transparent 11px 13px);}
+.vnum{writing-mode:vertical-rl;font-family:var(--mono);font-size:10px;letter-spacing:.14em;opacity:.85;}
+.glyphbox{font-family:var(--disp);font-size:22px;letter-spacing:-.1em;opacity:.9;}
+.dashline{width:1px;height:70px;background:repeating-linear-gradient(to bottom,var(--accent) 0 6px,transparent 6px 12px);}
+.dashline.sm{height:56px;}
+.tri{font-size:16px;line-height:.8;}
+.tri.dim{opacity:.4;}
+.vstack{display:flex;align-items:flex-start;gap:6px;}
+.vword{writing-mode:vertical-rl;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:.16em;}
+.rail--r .vnum{font-size:9px;}
+.chamfer-sq{width:28px;height:28px;border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;clip-path:polygon(0 0,100% 0,100% 72%,80% 100%,0 100%);}
+.pill{width:8px;height:26px;border-radius:5px;background:var(--accent);}
+.hatch{width:26px;height:22px;background:repeating-linear-gradient(90deg,var(--accent) 0 3px,transparent 3px 6px);clip-path:polygon(0 0,100% 0,100% 100%,20% 100%);}

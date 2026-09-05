@@ -1,0 +1,45 @@
+/* 07-screens.css
+   The four-screen mechanism. Read the margin-block:auto note before
+   touching alignment — it is load-bearing, not decorative. */
+
+/* ═══════════════════ 7. SCREENS ═══════════════════ */
+
+.main{position:absolute;inset:0;z-index:10;}
+
+.screen{
+  position:absolute;inset:0;
+  display:flex;justify-content:center;
+  padding:var(--hdr-h) var(--pad-x) var(--ftr-h);
+  /* The header and footer are fixed and float over this box. Without
+     scroll-padding, tabbing to a control near an edge scrolls it flush
+     to the scrollport and straight underneath them — WCAG 2.4.11. The
+     extra 20px at the end clears the telemetry strip. */
+  scroll-padding-block:var(--hdr-h) calc(var(--ftr-h) + 20px);
+  overflow-y:auto;overscroll-behavior:contain;
+  pointer-events:none;
+  /* HIDDEN WITH VISIBILITY. Not display:none, which would throw away
+     scroll position on every navigation, and not opacity alone, which
+     hides nothing: visibility:hidden removes the screen from the
+     accessibility tree AND from the tab order, which is the entire
+     point. opacity rides along so the pair can be transitioned later
+     without revisiting this. */
+  visibility:hidden;opacity:0;
+}
+.screen[data-active]{visibility:visible;opacity:1;pointer-events:auto;}
+.screen[data-active] > *{animation:contentIn .6s cubic-bezier(.2,.8,.2,1) both;}
+
+.screen > *{
+  width:100%;min-width:0;
+  /* DO NOT replace this with align-items:center on .screen. This
+     container scrolls. Centring an over-height flex item with
+     align-items pushes its top edge ABOVE the scrollport origin, and
+     there is no scroll position that can bring it back — the first
+     paragraph simply cannot be read. Auto block margins centre the item
+     when it fits and top-align it when it does not, which is correct in
+     both states.
+     Corollary, and the reason .screen no longer declares align-items at
+     any breakpoint: while a block-axis margin is auto, the flex
+     container's cross-axis alignment is ignored outright. Both
+     align-items declarations were inert. */
+  margin-block:auto;
+}

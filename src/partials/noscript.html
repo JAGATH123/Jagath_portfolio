@@ -1,0 +1,17 @@
+<noscript>
+<style>
+  /* No JS: unwind the fixed HUD shell into a plain scrolling document.
+     The project accordions need nothing here. Each one is a native details
+     element, so it discloses on its own, and the shared name="proj" keeps
+     them mutually exclusive without a line of script. */
+  body{overflow:auto;}
+  #root{position:static;overflow:visible;}
+  #bg,.wordmark-wrap,.fx,.rail,.tel,.glitch{display:none !important;}
+  .main{position:static;}
+  .hdr,.ftr{position:static;}
+  .screen{position:static;visibility:visible;opacity:1;display:block;pointer-events:auto;
+          padding:40px 20px;border-bottom:1px solid rgba(255,255,255,.14);}
+  .screen > *{margin:0 auto;}
+  .home{flex-direction:column;align-items:flex-start;}
+</style>
+</noscript>

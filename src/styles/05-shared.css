@@ -1,0 +1,82 @@
+/* 05-shared.css
+   Cross-screen utilities: .btn family, .slab family, .sr-only. */
+
+/* ═══════════════════ 5. SHARED ═══════════════════ */
+
+/* Visually hidden, still announced. Used inside the .contact links to
+   name the destination and to warn about target="_blank". Belt and
+   braces on the clipping: clip-path:inset(50%) is the modern one,
+   clip:rect() is there for engines that still want it. Do NOT swap this
+   for display:none or visibility:hidden — both remove it from the
+   accessibility tree, which is the exact opposite of the intent. */
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);
+  white-space:nowrap;border:0;
+}
+
+.jp{font-family:var(--jp);color:var(--accent);letter-spacing:.1em;}
+.jp.sm{font-size:9px;opacity:.75;}
+.chip{background:var(--accent);color:var(--ink);padding:1px 5px;font-size:9px;}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;}
+.blink{animation:blink 1.4s steps(1) infinite;}
+.pulse{animation:pulse 2.4s ease-in-out infinite;}
+
+/* Chromatic aberration. ONE definition. .metric used to carry a second
+   copy of this that had already drifted to .5 alpha, so the same effect
+   rendered at two strengths depending on which element you looked at.
+   It cannot become a :root token: the expression reads --ca, and a
+   custom property containing var() is substituted at the element it is
+   DECLARED on. A token on :root would freeze at the :root value of --ca
+   (0) and never see the one scene.js writes onto #root. A shared
+   selector list has no such problem. */
+.ca,.metric{text-shadow:calc(var(--ca) * -1px) 0 rgba(0,229,255,.55),calc(var(--ca) * 1px) 0 rgba(255,45,149,.55);}
+
+/* ── type scale ──────────────────────────────────────────────────────
+   The clamps below are single expressions that replace a base rule plus
+   a 820px override. Read `min(Avw, max(Ppx, Bvw))` as: track A on
+   phones, hold a P plateau through tablet, then resume the B desktop
+   ramp. That is precisely what the two rules used to do between them —
+   minus the step DOWN in size that used to happen as the viewport
+   crossed 821px and the mobile plateau was replaced by a lower point on
+   the desktop curve. */
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.24em;color:var(--accent);text-shadow:var(--sh-cap);}
+.display{font-family:var(--disp);font-weight:700;color:#fff;letter-spacing:-.01em;line-height:.94;}
+.display--xl{font-size:clamp(34px,min(10vw,max(64px,7.4vw)),104px);}
+.display--lg{font-size:clamp(30px,min(9vw,max(56px,5.6vw)),74px);letter-spacing:.02em;margin:4px 0 18px;}
+
+.lede{max-width:560px;margin:22px 0 0;font-size:15px;line-height:1.65;color:rgba(255,255,255,.9);text-shadow:var(--sh-copy);}
+
+/* ── clipped-corner buttons ── */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;cursor:pointer;
+  font-family:var(--disp);font-weight:700;
+  border:2px solid var(--accent);background:rgba(6,8,14,.35);color:var(--accent);
+  transition:background .16s ease,color .16s ease,transform .16s ease;
+  clip-path:polygon(3% 0,100% 0,100% 70%,97% 100%,0 100%,0 30%);
+}
+.btn:hover,.btn:focus-visible{background:var(--accent);color:var(--ink);}
+.btn--solid{background:var(--accent);color:var(--ink);font-size:18px;padding:10px 26px 12px;}
+.btn--solid:hover,.btn--solid:focus-visible{background:transparent;color:var(--accent);}
+.btn--ghost{font-size:18px;padding:10px 22px 12px;}
+.btn--mini{font-size:14px;letter-spacing:.1em;padding:6px 14px 7px;border-width:1px;clip-path:polygon(5% 0,100% 0,100% 66%,95% 100%,0 100%,0 34%);}
+.btn--hire{position:relative;font-size:19px;padding:8px 18px 10px 42px;clip-path:polygon(0 0,100% 0,100% 68%,95% 100%,0 100%);}
+.btn__hazard{position:absolute;left:0;top:0;bottom:0;width:28px;background:repeating-linear-gradient(45deg,currentColor 0 5px,transparent 5px 11px);opacity:.5;}
+.btn__caret{font-size:13px;}
+.btn--icon{width:46px;height:42px;padding:0;justify-content:center;clip-path:polygon(0 0,100% 0,100% 70%,88% 100%,0 100%);}
+.btn--contact{font-size:22px;padding:9px 30px 12px;clip-path:polygon(4% 0,100% 0,100% 72%,96% 100%,0 100%,0 28%);}
+.ico--on{display:none;}
+[aria-pressed="true"] .ico--on{display:block;}
+[aria-pressed="true"] .ico--off{display:none;}
+
+/* ── slab-highlighted display lines (ragged per-line blocks) ── */
+.slab-lines{display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin:0;}
+.slab-lines--c{align-items:center;text-align:center;}
+.slab{
+  font-family:var(--disp);font-weight:700;line-height:1.04;letter-spacing:-.01em;
+  font-size:clamp(19px,min(5.6vw,max(30px,3.2vw)),44px);
+  /* --slab-fg is declared in :root, so the old var() fallback to
+     --accent was unreachable. */
+  background:var(--accent2);color:var(--slab-fg);padding:3px 14px 8px;
+}
+.slab-lines--c .slab{font-size:clamp(18px,min(5.2vw,max(30px,3.4vw)),50px);}

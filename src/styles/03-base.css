@@ -1,0 +1,29 @@
+/* 03-base.css
+   Links, selection, focus ring, skip link. */
+
+/* ═══════════════════ 3. BASE ═══════════════════ */
+
+a{color:var(--accent);text-decoration:none;}
+::selection{background:var(--accent);color:var(--ink);}
+::-webkit-scrollbar{width:0;height:0;}
+
+/* There is deliberately no `a:hover{color:#fff}` here. It styled
+   nothing — every anchor in index.html carries a class — and at (0,1,1)
+   it outranked .skip at (0,1,0), so the single thing it achieved was
+   repainting the FOCUSED skip link white on its own --accent
+   background: 2.25:1, on the one control a keyboard user meets first. */
+
+:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+/* clip-path clips the outline too. On a chamfered control the focus
+   ring is cut away entirely and there is no visible focus at all.
+   Dropping the chamfer for the duration of the focus is the cheap fix;
+   a box-shadow ring would be eaten by exactly the same mechanism. */
+.btn:focus-visible,.proj__btn:focus-visible{clip-path:none;}
+
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:999;
+  background:var(--accent);color:var(--ink);padding:10px 18px;
+  font-family:var(--disp);font-weight:700;
+}
+.skip:focus{left:12px;top:12px;}

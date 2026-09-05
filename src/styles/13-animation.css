@@ -1,0 +1,17 @@
+/* 13-animation.css
+   Every @keyframes lives here. */
+
+/* ═══════════════════ 9. ANIMATION ═══════════════════ */
+
+.glitch{position:absolute;inset:0;z-index:40;pointer-events:none;overflow:hidden;display:none;}
+.glitch.on{display:block;}
+.glitch__flash{position:absolute;inset:0;mix-blend-mode:screen;background:linear-gradient(var(--accent),transparent 60%);animation:flash .44s steps(2) both;}
+.glitch__sweep{position:absolute;left:0;right:0;height:5vh;background:linear-gradient(to bottom,transparent,var(--accent2),transparent);mix-blend-mode:screen;filter:blur(1px);animation:sweep .44s linear both;}
+
+@keyframes contentIn{0%{opacity:0;transform:translateY(16px) skewX(-2.5deg);filter:blur(3px);}55%{filter:blur(0);}100%{opacity:1;transform:none;}}
+@keyframes caseIn{0%{opacity:0;transform:translateY(-8px);}100%{opacity:1;transform:none;}}
+@keyframes drift{0%,100%{transform:skewX(-9deg) rotate(-4deg) scale(1.42) translate(0,0);}50%{transform:skewX(-9deg) rotate(-4deg) scale(1.5) translate(-2.2%,1.4%);}}
+@keyframes flash{0%{opacity:0;transform:translateX(0);}15%{opacity:.55;transform:translateX(-7px);}35%{opacity:.18;transform:translateX(6px);}65%{opacity:.34;transform:translateX(-3px);}100%{opacity:0;transform:translateX(0);}}
+@keyframes sweep{0%{transform:translateY(-14vh);opacity:0;}12%{opacity:.85;}100%{transform:translateY(112vh);opacity:0;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.12;}}
+@keyframes pulse{0%,100%{opacity:.35;}50%{opacity:1;}}

@@ -1,0 +1,47 @@
+/* 02-tokens.css
+   The :root layer. SIX properties are written at runtime by
+   assets/js/scene/index.js — their values here are the boot-frame
+   defaults and are byte-exact matches for the coolant grade, so the
+   page is fully coloured with JS disabled. Do not drift them. */
+
+/* ═══════════════════ 2. TOKENS ═══════════════════ */
+
+:root{
+
+  /* ── a. JS-OWNED CHANNELS ─────────────────────────────────────────
+     These six, and only these six, are overwritten at runtime by
+     scene.js on the #root element. The values below are the `coolant`
+     grade. They are not placeholders and they are not greys: they are
+     what the site looks like when the script never runs. Keep them in
+     sync with GRADES.coolant in assets/js/scene/index.js. */
+  --accent:#6eb0ff;      /* rgb(110,176,255) — GRADES.coolant.acc     */
+  --accent2:#baeeff;     /* rgb(186,238,255) — GRADES.coolant.acc2    */
+  --slab-fg:#081e40;     /* rgb(8,30,64)     — GRADES.coolant.sfg     */
+  --ca:0;                /* chromatic-aberration offset, unitless px  */
+  --scan-op:.42;         /* .fx--scan opacity                          */
+  --grain-op:.06;        /* .fx--grain opacity                         */
+
+  /* ── b. PALETTE (ours, never written from outside) ── */
+  --ink:#08080c;         /* the colour that goes ON --accent */
+
+  /* ── c. LAYOUT METRICS ────────────────────────────────────────────
+     The breakpoints below move THESE, not the rules that use them.
+     --hdr-h / --ftr-h are the vertical space the fixed chrome reserves;
+     .screen turns them into padding and into scroll-padding. */
+  --pad-x:118px;
+  --hdr-h:132px;
+  --ftr-h:116px;
+
+  /* ── d. TYPOGRAPHY ── */
+  --disp:'Chakra Petch',system-ui,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --jp:'Noto Sans JP',system-ui,sans-serif;
+
+  /* Light text sits over a canvas whose brightness we do not control,
+     so every light-on-dark string carries a shadow. This used to be
+     twenty declarations across seven near-identical values. It is two,
+     split by type size. .feed__rec keeps its own — it sits on a
+     photograph, not the canvas, and wants a tighter, weaker shadow. */
+  --sh-cap:0 1px 4px rgba(0,0,0,.95);   /* captions and labels, ≤13px */
+  --sh-copy:0 1px 5px rgba(0,0,0,.95);  /* body copy and display type */
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "num": "001",
+    "name": "COODU AI",
+    "line": "India-first AI company. Built the whole front door before the first model shipped.",
+    "tech": "Next.js · GSAP",
+    "year": "2026",
+    "problem": "A brand-new AI company with no public presence, no narrative, and a founder-shaped bottleneck on everything.",
+    "approach": "Next.js + GSAP marketing site with a scroll-driven story, plus a structured founder knowledge base for vision, roadmap and pillar docs.",
+    "outcomeLabel": "STATUS",
+    "metricClass": "metric metric--word",
+    "metric": "IN BUILD",
+    "metricLabel": "SITE COMPLETE · PRE-DEPLOY"
+  },
+  {
+    "num": "002",
+    "name": "HELM",
+    "line": "A business operating system. Six modules that refuse to be six spreadsheets.",
+    "tech": "FastAPI · Docker",
+    "year": "2026",
+    "problem": "Small businesses run on a dozen disconnected sheets and WhatsApp threads. Nothing reconciles, nothing is auditable.",
+    "approach": "One FastAPI backend, six domain modules behind a shared auth and data layer, containerised with Docker for one-command deploy.",
+    "outcomeLabel": "OUTCOME",
+    "metricClass": "metric",
+    "metric": "6",
+    "metricLabel": "MODULES SHIPPED &amp; DOCKERISED"
+  },
+  {
+    "num": "003",
+    "name": "HERALD",
+    "line": "Email in, WhatsApp out. A concierge that reads your inbox so you don't have to.",
+    "tech": "Python · WhatsApp API",
+    "year": "2026",
+    "problem": "The important email always arrives while you're nowhere near an inbox — and buried under forty that aren't.",
+    "approach": "Python service that ingests mail, classifies and summarises it, then pushes only what matters to WhatsApp as an actionable thread.",
+    "outcomeLabel": "STATUS",
+    "metricClass": "metric metric--word",
+    "metric": "CODE-COMPLETE",
+    "metricLabel": "AWAITING PRODUCTION KEYS"
+  },
+  {
+    "num": "004",
+    "name": "SITE ATTENDANCE",
+    "line": "Face-recognition attendance for real construction sites. Dust, glare and all.",
+    "tech": "Python · OpenCV",
+    "year": "2026",
+    "problem": "Paper muster rolls on remote sites: unverifiable, slow to reconcile, and trivially gamed.",
+    "approach": "On-site face onboarding and 1:N matching pipeline with a supervisor review step, built to survive bad light and worse networks.",
+    "outcomeLabel": "OUTCOME",
+    "metricClass": "metric metric--word",
+    "metric": "1:N",
+    "metricLabel": "FACE MATCHING, OFFLINE-TOLERANT"
+  },
+  {
+    "num": "005",
+    "name": "COODU TRUST",
+    "line": "A donation platform where the money actually has to arrive.",
+    "tech": "JS · Payments · cPanel",
+    "year": "2026",
+    "problem": "Non-profit donation flows break in the least forgiving place possible: at the payment step, on a stranger's phone.",
+    "approach": "Rebuilt the front end and hardened the donation path end to end — environment-driven endpoints, no hardcoded hosts, deployable on shared hosting.",
+    "outcomeLabel": "STATUS",
+    "metricClass": "metric metric--word",
+    "metric": "ACTIVE",
+    "metricLabel": "DESIGN REBUILD IN FLIGHT"
+  },
+  {
+    "num": "006",
+    "name": "TOPROCK PORTAL",
+    "line": "Turned a creative team's spreadsheet sprawl into a dashboard they'll open twice a day.",
+    "tech": "Sheets API · JS",
+    "year": "2025",
+    "problem": "Creative pipeline status lived in a Google Sheet nobody trusted and everybody edited.",
+    "approach": "Read-through dashboard on the Sheets API with OAuth, so the sheet stays the source of truth while the team gets a real interface.",
+    "outcomeLabel": "OUTCOME",
+    "metricClass": "metric metric--word",
+    "metric": "LIVE",
+    "metricLabel": "TEAM DASHBOARD IN DAILY USE"
+  }
+]

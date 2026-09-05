@@ -1,0 +1,25 @@
+{{! project-card.html — one case study.
+    Repeated once per entry in src/content/projects.json.
+    Fields: num name line tech year problem approach
+            outcomeLabel metricClass metric metricLabel }}
+          <details class="proj" name="proj">
+            <summary class="proj__btn">
+              <span class="proj__num">{{ . num }}</span>
+              <h3 class="proj__id">
+                <span class="proj__name">{{ . name }}</span>
+                <span class="proj__line">{{ . line }}</span>
+              </h3>
+              <span class="proj__meta">{{ . tech }}<br><span>{{ . year }}</span></span>
+              <span class="proj__caret" aria-hidden="true">▾</span>
+            </summary>
+            <div class="case">
+              <div><h4><span aria-hidden="true">▪</span> PROBLEM</h4><p>{{ . problem }}</p></div>
+              <div><h4><span aria-hidden="true">▪</span> APPROACH</h4><p>{{ . approach }}</p></div>
+              <div class="case__out">
+                <h4><span aria-hidden="true">▪</span> {{ . outcomeLabel }}</h4>
+                <p class="{{ . metricClass }}">{{ . metric }}</p>
+                <p class="metric__lbl">{{ . metricLabel }}</p>
+                <a class="btn btn--mini" href="#info">ENQUIRE <span aria-hidden="true">▶</span></a>
+              </div>
+            </div>
+          </details>

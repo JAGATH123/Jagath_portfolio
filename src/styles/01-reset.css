@@ -1,0 +1,21 @@
+/* 01-reset.css
+   Minimal reset. Only what the UA actually gets wrong here. */
+
+/* ═══════════════════ 1. RESET ═══════════════════ */
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  /* no height:100% — html has no height, so the percentage resolved
+     against auto and the declaration did nothing. #root is fixed. */
+  background:#05060a;color:#fff;overflow:hidden;
+  font-family:'Space Mono',ui-monospace,monospace;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg,canvas{display:block;max-width:100%;}
+button{font:inherit;color:inherit;}
+ul,ol,dl,dd{margin:0;padding:0;list-style:none;}
+/* h4 is here because the case panels use it; `figure` has left because
+   the portrait is a <div> now and nothing in the markup is a figure. */
+h1,h2,h3,h4,p{margin:0;}

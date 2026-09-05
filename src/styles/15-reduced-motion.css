@@ -1,0 +1,16 @@
+/* 15-reduced-motion.css
+   prefers-reduced-motion. The !important here is deliberate: CSS does
+   not trust JS for a motion-sensitivity guarantee. */
+
+/* ═══════════════════ 11. REDUCED MOTION ═══════════════════ */
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  .wordmark-wrap{animation:none;}
+  /* Kept on purpose, and it is the only !important left in the file
+     that is not part of the boilerplate above. glitch.js also reads the
+     media query and skips adding .on — but a motion guarantee that
+     depends on a script having loaded and run is not a guarantee. CSS
+     declining to trust JS here is correct. */
+  .glitch{display:none !important;}
+}

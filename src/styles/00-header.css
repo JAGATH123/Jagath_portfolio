@@ -1,0 +1,64 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   DATUM LINE — JAGATHGURU portfolio
+   Static output, built from src/ by scripts/build.py. No framework, no
+   preprocessor. This file
+   is meant to be read and edited by hand, so it is ordered as a document
+   rather than as a bag of rules. Everything about one screen lives in
+   one place, and there is exactly one media block per breakpoint.
+
+   ORDER
+      1  RESET               element defaults
+      2  TOKENS              :root, in four labelled groups
+      3  BASE                links, selection, focus, skip link
+      4  SHELL + FX          #root, #bg, wordmark, the .fx stack
+      5  SHARED              type scale, small utilities, buttons, slabs
+      6  HEADER + RAILS      .hdr, .nav, .rail
+      7  SCREENS             .screen, then home / about / work / info
+      8  FOOTER + TELEMETRY  .ftr, .tel
+      9  ANIMATION           .glitch and every @keyframes
+     10  RESPONSIVE          one block per breakpoint, widest first
+     11  REDUCED MOTION
+     12  PRINT
+
+   ─── WRITTEN FROM OUTSIDE ────────────────────────────────────────────
+   assets/js/scene/index.js sets exactly SIX custom properties, and it sets
+   them on the #root ELEMENT as an inline style — not on :root. All six
+   are declared with defaults in group (a) below, byte-identical to
+   GRADES.coolant in scene.js, so the page is fully coloured with JS off,
+   blocked, or still loading.
+
+       --accent   --accent2   --slab-fg   --ca   --scan-op   --grain-op
+
+   Nothing else in this file may be assumed to arrive from JS. State
+   comes in as attributes instead: [data-active] on the live screen,
+   [aria-current="page"] on the live tab, [open] on the live <details>,
+   [aria-pressed] on the sound toggle.
+
+   ─── Z-INDEX LEGEND ──────────────────────────────────────────────────
+   One flat scale inside #root. Twelve values, no gaps reserved.
+
+        0   #bg                     the canvas
+        1   .wordmark-wrap          giant background word
+        2   .fx--scrim  .fx--lines
+        3   .fx--scan  .fx--grain  .fx--vignette
+        4   .crn  .feed__rec        LOCAL to .feed__frame — that element
+                                    has a clip-path, which makes it a
+                                    stacking context, so these two never
+                                    reach the scale above
+        8   .fx--chrome-top  .fx--chrome-bot
+       10   .main                   everything readable
+       15   .rail
+       19   .tel
+       20   .hdr  .ftr
+       40   .glitch                 covers the lot during a transition
+      999   .skip                   must beat all of the above on focus
+
+   ─── CHAMFERS ────────────────────────────────────────────────────────
+   Fifteen clip-path polygons and no two are alike. That is deliberate.
+   A polygon percentage resolves against that element's OWN border box,
+   so a 4% cut on a 46px icon button and a 4% cut on a 1120px panel are
+   completely different physical sizes. Each set was tuned against its
+   element's aspect ratio to land on roughly the same diagonal. Do NOT
+   unify them into a shared token — that is how you get a hairline notch
+   on the wide panels and a bitten-off corner on the small ones.
+   ═══════════════════════════════════════════════════════════════════ */

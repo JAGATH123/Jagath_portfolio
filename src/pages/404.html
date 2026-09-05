@@ -5,17 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>404 — Signal lost | JAGATHGURU</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#04101f">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#05060a">
+<!-- Root-absolute on purpose. GitHub Pages serves this file for ANY missing path
+     without rewriting the URL, so at /Jagath_portfolio/work/helm/typo a relative
+     href resolves against .../work/helm/ and 404s again. -->
+<link rel="icon" href="/Jagath_portfolio/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="/Jagath_portfolio/assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<!-- Byte-identical to index.html's Latin request so a visitor who has seen either
+     page gets the other one from cache instead of a second font download. -->
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
   body{
-    background:#04101f;color:#fff;font-family:'Space Mono',ui-monospace,monospace;
+    background:#05060a;color:#fff;font-family:'Space Mono',ui-monospace,monospace;
     display:flex;align-items:center;justify-content:center;padding:32px;
     background-image:
       radial-gradient(60% 60% at 20% 15%, rgba(58,138,255,.28), transparent 70%),
@@ -42,8 +47,8 @@
     clip-path:polygon(3% 0,100% 0,100% 70%,97% 100%,0 100%,0 30%);
     transition:background .16s ease,color .16s ease;
   }
-  a.btn:hover,a.btn:focus-visible{background:#6eb0ff;color:#081e40}
-  a.btn--solid{background:#6eb0ff;color:#081e40}
+  a.btn:hover,a.btn:focus-visible{background:#6eb0ff;color:#08080c}
+  a.btn--solid{background:#6eb0ff;color:#08080c}
   a.btn--solid:hover,a.btn--solid:focus-visible{background:transparent;color:#6eb0ff}
   .meta{margin-top:34px;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.45)}
   :focus-visible{outline:2px solid #fff;outline-offset:3px}
@@ -51,14 +56,14 @@
 </head>
 <body>
 <main>
-  <p class="eyebrow">&#9658; ERROR // 404 — NO ROUTE</p>
+  <p class="eyebrow"><span aria-hidden="true">►</span> ERROR // 404 — NO ROUTE</p>
   <h1>404</h1>
   <p class="slab">That page isn't on this server.</p>
   <p>The link may be stale, or mistyped. Nothing was broken on your end — this address simply doesn't map to anything here.</p>
   <div class="row">
-    <a class="btn btn--solid" href="./">RETURN TO INDEX <span aria-hidden="true">&#9654;</span></a>
-    <a class="btn" href="./#work">VIEW BUILDS</a>
-    <a class="btn" href="./#info">CONTACT</a>
+    <a class="btn btn--solid" href="/Jagath_portfolio/">RETURN TO INDEX <span aria-hidden="true">▶</span></a>
+    <a class="btn" href="/Jagath_portfolio/#work">VIEW BUILDS</a>
+    <a class="btn" href="/Jagath_portfolio/#info">CONTACT</a>
   </div>
   <p class="meta">JAGATHGURU — SOFTWARE DEVELOPER</p>
 </main>

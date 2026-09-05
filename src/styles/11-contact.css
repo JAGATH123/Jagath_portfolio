@@ -1,0 +1,25 @@
+/* 11-contact.css
+   Contact screen only. */
+
+/* ─────────── INFO ─────────── */
+.info{max-width:1080px;display:flex;flex-direction:column;align-items:center;}
+/* no `.contact > div{text-align:left}` — nothing above it sets a
+   text-align, so it was restating the inherited initial value. */
+.contact{display:flex;justify-content:center;flex-wrap:wrap;gap:18px 46px;margin-top:42px;}
+.contact__k{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--accent);margin-bottom:4px;text-shadow:var(--sh-cap);}
+.contact__v{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:16px;color:#fff;text-shadow:var(--sh-copy);}
+/* Three of these five are links and two are not, and until now they
+   were indistinguishable — 1.4.1 again, since the only thing separating
+   them was a hover colour. The underline is the affordance.
+   display:inline is load-bearing: text-decoration does not propagate
+   into flex items, so an underline on the inline-flex box would paint
+   nothing. The links carry no .dot, so they never needed the flex.
+   The `a` type qualifier that used to be on the hover rule existed only
+   to out-specify a:hover{color:#fff}; that rule is gone, and scoping to
+   the modifier class keeps the hover off the two non-link spans. */
+.contact__v--link{
+  display:inline;
+  text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;
+}
+.contact__v--link:hover{color:var(--accent);}
+.info__note{margin-top:30px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.82);text-shadow:var(--sh-copy);}

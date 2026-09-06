@@ -10,7 +10,8 @@
     "outcomeLabel": "STATUS",
     "metricClass": "metric metric--word",
     "metric": "IN BUILD",
-    "metricLabel": "SITE COMPLETE · PRE-DEPLOY"
+    "metricLabel": "SITE COMPLETE · PRE-DEPLOY",
+    "outcomeKind": "status"
   },
   {
     "num": "002",
@@ -23,7 +24,8 @@
     "outcomeLabel": "OUTCOME",
     "metricClass": "metric",
     "metric": "6",
-    "metricLabel": "MODULES SHIPPED &amp; DOCKERISED"
+    "metricLabel": "MODULES SHIPPED &amp; DOCKERISED",
+    "outcomeKind": "figure"
   },
   {
     "num": "003",
@@ -36,7 +38,8 @@
     "outcomeLabel": "STATUS",
     "metricClass": "metric metric--word",
     "metric": "CODE-COMPLETE",
-    "metricLabel": "AWAITING PRODUCTION KEYS"
+    "metricLabel": "AWAITING PRODUCTION KEYS",
+    "outcomeKind": "status"
   },
   {
     "num": "004",
@@ -49,7 +52,8 @@
     "outcomeLabel": "OUTCOME",
     "metricClass": "metric metric--word",
     "metric": "1:N",
-    "metricLabel": "FACE MATCHING, OFFLINE-TOLERANT"
+    "metricLabel": "FACE MATCHING, OFFLINE-TOLERANT",
+    "outcomeKind": "figure"
   },
   {
     "num": "005",
@@ -62,7 +66,8 @@
     "outcomeLabel": "STATUS",
     "metricClass": "metric metric--word",
     "metric": "ACTIVE",
-    "metricLabel": "DESIGN REBUILD IN FLIGHT"
+    "metricLabel": "DESIGN REBUILD IN FLIGHT",
+    "outcomeKind": "status"
   },
   {
     "num": "006",
@@ -75,6 +80,7 @@
     "outcomeLabel": "OUTCOME",
     "metricClass": "metric metric--word",
     "metric": "LIVE",
-    "metricLabel": "TEAM DASHBOARD IN DAILY USE"
+    "metricLabel": "TEAM DASHBOARD IN DAILY USE",
+    "outcomeKind": "live"
   }
 ]

@@ -10,6 +10,10 @@
    goes back to reading the tokens so it cannot drift again. */
 .screen--work{padding-block:106px 94px;}
 
+/* the count is generated from projects.json, so it cannot drift */
+.work__head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;}
+.work__count{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.62);text-shadow:var(--sh-cap);white-space:nowrap;}
+
 .projects{display:flex;flex-direction:column;gap:7px;}
 
 /* The accordion is native: <details class="proj" name="proj">. The
@@ -37,7 +41,8 @@
 .proj__btn::-webkit-details-marker{display:none;}
 .proj__btn::marker{content:"";}
 
-.proj__btn:hover,.proj__btn:focus-visible{border-color:var(--accent);background:rgba(255,255,255,.07);transform:translateX(7px);}
+.proj__btn:focus-visible{border-color:var(--accent);background:rgba(255,255,255,.07);transform:translateX(7px);}
+@media (hover:hover){.proj__btn:hover{border-color:var(--accent);background:rgba(255,255,255,.07);transform:translateX(7px);}}
 /* open state: bind the summary to the panel it opened. */
 .proj[open] .proj__btn{border-color:var(--accent);}
 
@@ -48,6 +53,10 @@
 .proj__id{font:inherit;}
 .proj__name{display:block;font-family:var(--disp);font-weight:600;font-size:clamp(17px,2.2vw,28px);letter-spacing:.01em;}
 .proj__line{display:block;font-family:var(--mono);font-size:12.5px;color:rgba(255,255,255,.72);margin-top:3px;}
+/* the outcome-at-rest chip belongs to the phone tier. .proj__btn is a
+   four-column grid and this is a fifth child, so left visible it drops
+   .proj__caret onto an implicit second row on every card. */
+.proj__out{display:none;}
 .proj__meta{text-align:right;font-family:var(--mono);font-size:12px;color:var(--accent);}
 .proj__meta span{color:rgba(255,255,255,.68);}
 .proj__caret{font-size:13px;color:var(--accent);transition:transform .2s ease;}

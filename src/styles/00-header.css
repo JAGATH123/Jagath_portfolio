@@ -50,6 +50,9 @@
        15   .rail
        19   .tel
        20   .hdr  .ftr
+       21   #root::after            phone-tier instrument frame
+       22   .hdr__right             phone-tier nav, fixed to the
+                                    bottom edge — above the frame
        40   .glitch                 covers the lot during a transition
       999   .skip                   must beat all of the above on focus
 

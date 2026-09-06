@@ -55,9 +55,9 @@
   transition:background .16s ease,color .16s ease,transform .16s ease;
   clip-path:polygon(3% 0,100% 0,100% 70%,97% 100%,0 100%,0 30%);
 }
-.btn:hover,.btn:focus-visible{background:var(--accent);color:var(--ink);}
+.btn:focus-visible{background:var(--accent);color:var(--ink);}
 .btn--solid{background:var(--accent);color:var(--ink);font-size:18px;padding:10px 26px 12px;}
-.btn--solid:hover,.btn--solid:focus-visible{background:transparent;color:var(--accent);}
+.btn--solid:focus-visible{background:transparent;color:var(--accent);}
 .btn--ghost{font-size:18px;padding:10px 22px 12px;}
 .btn--mini{font-size:14px;letter-spacing:.1em;padding:6px 14px 7px;border-width:1px;clip-path:polygon(5% 0,100% 0,100% 66%,95% 100%,0 100%,0 34%);}
 .btn--hire{position:relative;font-size:19px;padding:8px 18px 10px 42px;clip-path:polygon(0 0,100% 0,100% 68%,95% 100%,0 100%);}
@@ -68,6 +68,17 @@
 .ico--on{display:none;}
 [aria-pressed="true"] .ico--on{display:block;}
 [aria-pressed="true"] .ico--off{display:none;}
+
+
+/* Hover is a capability, not a width. Unguarded, every one of these
+   fires on tap on a touchscreen and stays until the next tap somewhere
+   else: a tapped primary CTA went ghost and stayed ghost, and a tapped
+   project card stayed shifted 7px right. :focus-visible stays outside
+   the guard — a keyboard still needs it on a touch device. */
+@media (hover:hover){
+  .btn:hover{background:var(--accent);color:var(--ink);}
+  .btn--solid:hover{background:transparent;color:var(--accent);}
+}
 
 /* ── slab-highlighted display lines (ragged per-line blocks) ── */
 .slab-lines{display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin:0;}

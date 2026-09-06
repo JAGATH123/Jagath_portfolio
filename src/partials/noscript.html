@@ -6,9 +6,12 @@
      them mutually exclusive without a line of script. */
   body{overflow:auto;}
   #root{position:static;overflow:visible;}
-  #bg,.wordmark-wrap,.fx,.rail,.tel,.glitch{display:none !important;}
+  #bg,.wordmark-wrap,.fx,.rail,.tel,.glitch,#root::after{display:none !important;}
   .main{position:static;}
   .hdr,.ftr{position:static;}
+  /* the phone tier fixes this to the bottom edge; in a static document
+     it would float over the scrolling page forever. */
+  .hdr__right{position:static;}
   .screen{position:static;visibility:visible;opacity:1;display:block;pointer-events:auto;
           padding:40px 20px;border-bottom:1px solid rgba(255,255,255,.14);}
   .screen > *{margin:0 auto;}

@@ -14,6 +14,7 @@
 11-contact.css
 12-footer.css
 13-animation.css
-14-responsive.css
-15-reduced-motion.css
-16-print.css
+14-tablet.css
+15-phone.css
+16-reduced-motion.css
+17-print.css

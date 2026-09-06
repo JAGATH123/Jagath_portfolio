@@ -26,6 +26,7 @@ TEMPLATE SYNTAX — four constructs, no engine, no dependencies:
     {{! a note }}                      documentation; stripped from the output
     {{> partials/head.html }}          include a file (recursive, indent-aware)
     {{ site.email }}                   dotted lookup into src/content/*.json
+    {{ count.projects }}               how many entries projects.json has
     {{# projects }} … {{/ projects }}  repeat per entry, {{ . field }} inside
 
 Anything else inside {{ }} raises a build error naming the file and the
@@ -59,10 +60,15 @@ class BuildError(Exception):
 
 def load_content():
     """Every file in src/content/ becomes a top-level name in templates."""
-    return {
+    data = {
         path.stem: json.loads(path.read_text(encoding="utf-8"))
         for path in sorted((SRC / "content").glob("*.json"))
     }
+    # Every list also gets a zero-padded length under `count`, so the
+    # WORK screen can print "06 BUILDS" without a literal that goes
+    # quietly wrong the first time a seventh project is added.
+    data["count"] = {k: f"{len(v):02d}" for k, v in data.items() if isinstance(v, list)}
+    return data
 
 
 def resolve(expr, data, item, origin="?"):

@@ -38,6 +38,7 @@ Four constructs. There is no engine and no dependency.
 {{! a note }}                       documentation; stripped from the output
 {{> partials/head.html }}           include a file; recursive, indent-aware
 {{ site.email }}                    dotted lookup into src/content/*.json
+{{ count.projects }}                how many entries projects.json has
 {{# projects }} … {{/ projects }}   repeat per entry; {{ . field }} inside
 ```
 
@@ -60,7 +61,7 @@ was added.
 
 ## Styles
 
-Seventeen partials in `src/styles/`, concatenated in the order given by
+Eighteen partials in `src/styles/`, concatenated in the order given by
 `main.css.order`.
 
 **That order is the cascade.** Reordering the manifest changes which rules
@@ -68,7 +69,45 @@ win. Treat it as code.
 
 The split follows the stylesheet's own structure: header (the map and
 legends) → reset → tokens → base → shell → shared → header/rails → screens →
-one file per screen → footer → animation → responsive → reduced-motion → print.
+one file per screen → footer → animation → **one file per device tier** →
+reduced-motion → print.
+
+### Device tiers
+
+Each tier owns a file and owns it completely — `15-phone.css` does not layer
+on top of `14-tablet.css`, it replaces it, and the two queries are written so
+they can never both match. That is deliberate: the previous single
+`14-responsive.css` had `@media (max-width:820px)` doing double duty as both
+"tablet" and "phone", so an iPad Air in portrait (820px) got the phone layout
+at a 95ch text measure with the rails switched off.
+
+```
+                        width            height        file
+desktop, full HUD       > 1150px         —             (the base rules)
+tablet                  761–1150px       > 480px       14-tablet.css
+short (any tier ≥ 761)  ≥ 761px          481–800px     14-tablet.css
+phone                   ≤ 760px          —             15-phone.css
+phone, on its side      ≤ 1000px         ≤ 480px       15-phone.css
+small phone             ≤ 380px          —             15-phone.css
+```
+
+Two of those rows are the reason the map is not a simple ladder:
+
+- **A phone on its side is 812–932px wide.** Width alone cannot find it. The
+  rule this replaces read `(max-height:520px) and (min-width:821px)` and so
+  matched none of the phones it was written for. The phone tier's query is
+  `(max-width:760px),(max-width:1000px) and (max-height:480px)` — OR-of-AND —
+  and the tablet band excludes the same shape with `(min-height:481px)`.
+- **`src/scripts/scene/index.js` hardcodes the same number.** `NARROW` drives
+  the blob count and the chromatic-aberration strength. It is 760 because the
+  phone tier is; if one moves, both move.
+
+The phone tier re-composes the HUD rather than deleting it: the two side
+rails become a drawn instrument frame (`#root::after`, four gradient layers on
+one pseudo-element), the nav leaves the top of the screen for the thumb zone,
+and the portrait stops being a card beside the copy and becomes the one
+full-bleed moment. Reserved chrome goes from 296px of an 852px screen to
+150px.
 
 ## Scripts
 
@@ -78,7 +117,7 @@ Ten ES modules. `main.js` wires them together and holds no logic of its own.
 main.js       constructs and connects. 58 lines.
 loop.js       the single rAF ticker — running flag, visibility pause, recovery
 media.js      watchMedia(); reduced-motion as a live signal. scene/index.js
-              uses the same helper for its own 820px breakpoint.
+              uses the same helper for its own 760px breakpoint.
 router.js     hash routing; reflects the route into DOM, title and focus
 scene/        canvas field, colour grades, the six CSS custom properties
 telemetry.js  clock, uptime, FPS, grade readout

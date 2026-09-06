@@ -1,7 +1,7 @@
 {{! project-card.html — one case study.
     Repeated once per entry in src/content/projects.json.
-    Fields: num name line tech year problem approach
-            outcomeLabel metricClass metric metricLabel }}
+    Fields: num name line tech year problem approach outcomeLabel
+            metricClass metric metricLabel outcomeKind }}
           <details class="proj" name="proj">
             <summary class="proj__btn">
               <span class="proj__num">{{ . num }}</span>
@@ -10,6 +10,9 @@
                 <span class="proj__line">{{ . line }}</span>
               </h3>
               <span class="proj__meta">{{ . tech }}<br><span>{{ . year }}</span></span>
+              {{! phone tier swaps this in where .proj__meta sits: the outcome
+                  is worth more than tech/year when only one of the two fits. }}
+              <span class="proj__out proj__out--{{ . outcomeKind }}">{{ . metric }}</span>
               <span class="proj__caret" aria-hidden="true">▾</span>
             </summary>
             <div class="case">

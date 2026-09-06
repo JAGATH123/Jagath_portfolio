@@ -65,8 +65,10 @@ it runs here, or in CI, and produces files any static server can serve.
 
 It exists because the alternative was one 500-line `index.html` with six
 copy-pasted case studies inside it. Now the content is data, each screen is a
-file you can hold in your head, and the stylesheet is seventeen focused
-partials instead of one 900-line scroll.
+file you can hold in your head, and the stylesheet is eighteen focused
+partials instead of one 900-line scroll — one per component, then one per
+device tier. See [docs/architecture.md](docs/architecture.md#device-tiers)
+for the breakpoint map and why it is not a simple ladder.
 
 `scripts/build.py` is ~200 lines of standard library. Four template
 constructs, no engine, no `node_modules`. See

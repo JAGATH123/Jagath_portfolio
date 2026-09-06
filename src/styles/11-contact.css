@@ -20,6 +20,13 @@
 .contact__v--link{
   display:inline;
   text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;
+  /* 2.5.8 Target Size (Minimum). A 16px link on its own line in a <dd> is a
+     21px target and these three are not inline in a sentence, so the
+     "constrained by line-height" exception does not apply. Block padding on
+     an inline box grows the hit area without moving anything: there is no
+     background or border here for it to reveal, and the line box does not
+     grow either. The phone tier makes the whole plate the target instead. */
+  padding-block:4px;
 }
-.contact__v--link:hover{color:var(--accent);}
+@media (hover:hover){.contact__v--link:hover{color:var(--accent);}}
 .info__note{margin-top:30px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.82);text-shadow:var(--sh-copy);}

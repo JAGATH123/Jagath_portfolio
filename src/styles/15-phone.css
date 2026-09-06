@@ -1,0 +1,386 @@
+/* 15-phone.css
+   Everything at 760px and below. This tier is self-contained: it does not
+   layer on top of the tablet file, it replaces it, so every declaration a
+   phone needs is here even where the tablet asks for the same thing.
+
+   The HUD is re-composed rather than deleted. The two side rails are the
+   frame on a desktop and there is no room for them at 393px, so the frame
+   is drawn directly; the nav leaves the top of the screen, which is not
+   reachable one-handed, for the thumb zone; and the portrait stops being
+   a card beside the copy and becomes the one full-bleed moment.
+
+   Reservation budget, against a 393x852 iPhone:
+     header   72px + safe-area   (was 146 — a two-row header and four tabs)
+     nav      78px + safe-area   (was 150 — footer, contact button, telemetry)
+   That is 150px of 852 rather than 296px: 82% of the screen is content,
+   where 65% was. */
+
+/* A phone on its side is 812-932px wide, so width alone cannot find it:
+   the old rule read (max-height:520px) and (min-width:821px) and so
+   caught none of them. `A, B and C` is OR-of-AND — narrow, or short and
+   not wide enough to be a laptop window. 14-tablet.css excludes the same
+   shape with min-height:481px, so the two tiers never both apply. */
+@media (max-width:760px),(max-width:1000px) and (max-height:480px){
+
+  :root{
+    --pad-x:18px;
+    /* viewport-fit=cover in partials/head.html is what makes these
+       resolve to anything but 0 — without it the nav renders under the
+       home indicator and the header under the notch. */
+    --hdr-h:calc(72px + env(safe-area-inset-top));
+    --ftr-h:calc(78px + env(safe-area-inset-bottom));
+  }
+
+  /* ── the instrument frame ────────────────────────────────────────────
+     One pseudo-element, four gradient layers: a hairline box with accent
+     brackets at the two top corners. It is pure decoration and must stay
+     out of the accessibility tree, which rules out markup. It stops at
+     the nav rather than running behind it, because the nav is furniture
+     and the frame is what furniture sits outside of.
+     z-index 21 — above .hdr/.ftr at 20, below .glitch at 40. */
+  #root::after{
+    content:"";position:absolute;z-index:21;pointer-events:none;
+    top:calc(8px + env(safe-area-inset-top));left:8px;right:8px;
+    bottom:calc(var(--ftr-h) - 8px);
+    border:1px solid rgba(255,255,255,.14);
+    background-origin:border-box;background-repeat:no-repeat;
+    background-image:
+      linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--accent),var(--accent)),
+      linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--accent),var(--accent));
+    background-size:24px 2px,2px 24px,24px 2px,2px 24px;
+    background-position:0 0,0 0,100% 0,100% 0;
+  }
+
+  /* ── shared ── */
+  .slab{padding:3px 11px 7px;}
+  .slab-lines--c{align-items:flex-start;text-align:left;}
+  .lede{max-width:none;font-size:13.5px;line-height:1.7;margin-top:16px;}
+  /* 10vw of the base clamp is a measured desktop ramp read at phone
+     width; the headline now sits on the photograph and has to hold the
+     frame. 12.6vw fills 393px with JAGATHGURU and still fits ABOUT. */
+  .display--xl{font-size:clamp(38px,12.6vw,56px);}
+  .display--lg{font-size:clamp(34px,15vw,62px);margin:2px 0 14px;}
+
+  /* ── header: one row ── */
+  .hdr{
+    flex-direction:row;align-items:center;gap:12px;
+    padding:calc(15px + env(safe-area-inset-top)) 21px 0;
+  }
+  .hdr__left{gap:10px;}
+  .brand{gap:9px;}
+  .brand__hex{width:29px;height:31px;padding-top:5px;font-size:9px;}
+  /* the <br> is the desktop two-line lockup; the space around it survives */
+  .brand__word{font-size:14px;line-height:1;letter-spacing:.13em;}
+  .brand__word br{display:none;}
+  .hire{display:none;}
+  .nav__cap{display:none;}
+  .rail{display:none;}
+
+  /* ── the grade readout ────────────────────────────────────────────────
+     The mockup's header prints the live grade name. That string already
+     exists — it is the last item of the telemetry strip — so the strip is
+     re-laid-out into the header corner instead of a second element being
+     added that would have to be kept in sync with it. row-reverse puts
+     the name before the dot, as drawn; it is safe here and NOT on .nav,
+     where router.js reads document order for the digit shortcuts.
+     .tel's right offset and .ftr's below are a pair: this must clear the
+     sound button. */
+  .tel{
+    top:calc(23px + env(safe-area-inset-top));right:66px;bottom:auto;left:auto;
+    transform:none;flex-direction:row-reverse;gap:7px;padding:0;
+    border:0;background:none;clip-path:none;
+    backdrop-filter:none;-webkit-backdrop-filter:none;
+    width:auto;justify-content:flex-start;
+    font-size:9.5px;letter-spacing:.14em;
+  }
+  .tel b{display:none;}
+  .tel__i:nth-child(n+2):nth-child(-n+4){display:none;}
+  .tel .dot{width:5px;height:5px;}
+
+  /* ── the sound toggle ────────────────────────────────────────────────
+     The footer's two info blocks and its Contact button are duplicates
+     here — LOCATION has a row on the info screen, \info is a nav plate —
+     and at this width they printed themselves straight over the
+     scrolling content, which is the defect this tier exists to fix. The
+     toggle is the one control with no other home, so the footer collapses
+     to hold just it and moves up beside the readout. */
+  .ftr{
+    top:calc(19px + env(safe-area-inset-top));bottom:auto;
+    justify-content:flex-end;align-items:center;padding:0 30px;
+  }
+  .ftr__info,.ftr__tech,.ftr__actcol.r,.ftr__actcol .jp{display:none;}
+  .ftr__act{gap:0;}
+  .btn--icon{width:28px;height:25px;}
+  .btn--icon svg{width:14px;height:14px;}
+
+  /* ── nav: the thumb zone ─────────────────────────────────────────────
+     position:fixed, not absolute — .hdr is the offset parent and its box
+     is 72px tall at the top of the screen. Fixed measures against the
+     viewport. It stays where it is in the DOM, before <main>: 1.3.2 wants
+     a meaningful reading sequence and nav-then-content is one. C27
+     (match DOM to visual order) is advisory, and router.js:121 already
+     moves focus into the screen on every navigation, so "focus is at the
+     bottom, then jumps to the content" is the established pattern here. */
+  .hdr__right{
+    position:fixed;left:0;right:0;bottom:0;top:auto;z-index:22;
+    align-items:stretch;gap:0;
+    padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+    /* The screens scroll UNDER this — .screen is the scrollport and the
+       nav floats over it. Without an opaque base the last WORK card and
+       HOME's status line read straight through the plates. */
+    background:linear-gradient(to top,rgba(5,6,10,.97) 60%,rgba(5,6,10,.88));
+    backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+    border-top:1px solid rgba(255,255,255,.1);
+  }
+  .nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;align-items:stretch;}
+  .tab{width:100%;}
+  .tab .jp{display:none;}
+  .tab__box{
+    flex-direction:column;align-items:center;justify-content:center;gap:0;
+    width:100%;padding:8px 2px 10px;border-width:1px;font-size:15.5px;
+    clip-path:polygon(0 0,100% 0,100% 64%,86% 100%,0 100%);
+  }
+  /* same reason as .tab__t at 06-header-rails.css:38 — .tab__box::before
+     is an absolutely positioned accent fill, and an unpositioned inline
+     child is painted underneath it. At opacity 1 that is not "washed
+     out", it is "not rendered". */
+  .tab__n{
+    position:relative;display:block;
+    font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;opacity:.72;
+  }
+  /* ACTIVE PLATE, re-measured for a solid fill. The desktop cue is a .55
+     wash + white label + a 4px bar; at plate size the fill itself is the
+     shape 1.4.1 asks for, so the bar is redundant furniture. --ink on
+     --accent is the pair .role and .btn--solid already use and measures
+     8.4:1 (coolant) to 11.6:1 (ember) across the four grades — better
+     than the 4.4-6.2:1 the white-on-wash version managed.
+     Specificity must match 06-header-rails.css:56-64 at (0,3,x) or none
+     of this applies. */
+  .tab[aria-current="page"] .tab__box::before{opacity:1;}
+  .tab[aria-current="page"] .tab__box{color:var(--ink);box-shadow:none;}
+  .tab[aria-current="page"] .tab__box::after{content:none;}
+  .tab[aria-current="page"] .tab__n{opacity:.85;}
+
+  /* ── screens ── */
+  .screen{overflow-x:hidden;}
+
+  /* ── home ────────────────────────────────────────────────────────────
+     Column flex with align-items:flex-start does NOT stretch children,
+     which overflows the gutter — hence stretch, explicitly. */
+  .home{flex-direction:column;align-items:stretch;gap:0;}
+  /* -58 and not more: the crossing has to put the <h1> on the frame and
+     the eyebrow BELOW it. At -84 the 13px eyebrow landed at 74% of the
+     frame, where the gradient has not closed yet, and measured 2.5:1 on
+     the shirt — a 1.4.3 failure at that size. */
+  .home__copy{position:relative;z-index:2;width:100%;min-width:0;margin-top:-58px;}
+  /* The portrait leads: it is the one full-bleed moment and it cannot
+     arrive four screenfuls below the name. Only the paint order moves —
+     .feed holds nothing focusable, so the tab order is untouched, and a
+     screen reader still meets the <h1> before the image, which is the
+     right order to hear it in. */
+  .feed{order:-1;flex:none;width:auto;max-width:none;margin-inline:calc(var(--pad-x) * -1);}
+  .feed__cap,.feed__meta{display:none;}
+  .feed__frame{
+    /* aspect-ratio is the ONLY height source here: the <img> is
+       position:absolute. `auto` collapses the frame to 0. */
+    aspect-ratio:4/3;border:0;box-shadow:none;
+    /* the diagonal break the name lands on */
+    clip-path:polygon(0 0,100% 0,100% 87%,0 100%);
+  }
+  /* .display carries no text-shadow anywhere in the site, because the
+     display type sits on a canvas whose brightness the site controls.
+     Over a photograph it does not, so the crossing gets both: a real
+     gradient under the name and a shadow on it. */
+  .feed__grad{background:linear-gradient(to bottom,rgba(0,0,0,0) 30%,rgba(5,6,10,.42) 58%,rgba(5,6,10,.9) 80%,rgba(5,6,10,.99));}
+  .home__copy .display,.home__copy .eyebrow{text-shadow:var(--sh-copy);}
+  .crn{display:none;}
+  /* mirror of the 34px that used to clear .crn--tl */
+  .feed__rec{top:15px;left:auto;right:18px;}
+
+  .rolerow{gap:7px 10px;margin:11px 0 16px;}
+  .role__sub{font-size:10.5px;letter-spacing:.13em;}
+  .ctarow{flex-direction:column;align-items:stretch;gap:10px;margin-top:20px;}
+  /* clip-path stays OFF this selector: at (0,2,0) it would beat
+     .btn:focus-visible{clip-path:none} (03-base.css:22, same specificity,
+     earlier file) and clip the focus ring away. */
+  .ctarow .btn{justify-content:center;}
+  .btn--solid,.btn--ghost{font-size:16.5px;padding:11px 18px 13px;}
+  .status{font-size:11px;margin-top:2px;}
+
+  /* ── about ───────────────────────────────────────────────────────────
+     Ragged plates, not a stack. Four highlighted lines flush to one
+     margin read as a pull-quote; stepped 0/14/28/14 they read as HUD
+     furniture, which is what they are. */
+  .hook{min-height:auto;}
+  .hook .eyebrow{margin-bottom:14px;}
+  .hook .slab-lines{gap:7px;}
+  .hook .slab:nth-child(2){margin-left:14px;}
+  .hook .slab:nth-child(3){margin-left:28px;}
+  .hook .slab:nth-child(4){margin-left:14px;}
+  .cue{margin-top:26px;font-size:11px;}
+
+  .elab{margin-top:28px;padding-top:22px;border-top:1px dashed rgba(255,255,255,.2);}
+  .elab p{max-width:none;font-size:13px;line-height:1.74;margin-bottom:14px;}
+  .elab p.elab__kick{margin-top:20px;padding-left:13px;font-size:14px;}
+
+  /* The creed was white display type on the canvas sitting directly under
+     body copy in the same white — at this size the two competed instead
+     of one concluding the other. A dark plate separates them without
+     making it louder. The padding shorthand also drops the 30ch measure
+     that 09-about.css:41-45 builds out of padding-right, which is correct
+     here: 30ch of 19px display type is narrower than the screen. */
+  .creed{
+    margin-top:24px;padding:15px 15px 17px;
+    background:rgba(4,6,12,.74);font-size:19px;line-height:1.34;
+  }
+  .creed br{display:none;}
+
+  .ident{margin-top:34px;padding-top:24px;}
+  .ident__lead{max-width:none;font-size:14px;}
+  .ident__body{max-width:none;font-size:12.5px;}
+  .ident__next{flex-direction:column;align-items:flex-start;gap:4px;font-size:16.5px;}
+  .ident .statline{margin-top:24px;}
+  .statline{gap:12px 26px;}
+  .statline dd{font-size:13.5px;}
+
+  /* ── work ────────────────────────────────────────────────────────────
+     Back onto the tokens: the base rule hardcodes 106/94px, which cannot
+     track a header that is now 72px. */
+  .screen--work{padding-block:var(--hdr-h) var(--ftr-h);}
+  .projects{gap:8px;}
+  /* The card has to answer "and what came of it" at rest. Six taps to
+     read six outcomes is six taps too many on a phone, so tech/year —
+     the least useful of the two pairs — gives its column to the outcome.
+     Three columns, three visible children: .proj__meta and .proj__caret
+     are display:none and leave the grid entirely. */
+  .proj__btn{
+    grid-template-columns:40px minmax(0,1fr) auto;gap:3px 11px;
+    align-items:start;padding:11px 13px 12px;
+  }
+  .proj__meta,.proj__caret{display:none;}
+  .proj__num{font-size:17px;align-self:center;}
+  .proj__name{font-size:17px;}
+  .proj__line{font-size:12px;line-height:1.5;margin-top:4px;}
+  .proj__out{
+    display:block;align-self:start;margin-top:1px;white-space:nowrap;
+    font-family:var(--disp);font-weight:700;letter-spacing:.09em;
+    font-size:10px;color:var(--accent);
+  }
+  .proj__out--status{border:1px solid var(--accent);padding:3px 6px 4px;}
+  .proj__out--live{background:var(--accent);color:var(--ink);padding:3px 6px 4px;}
+  /* a bare figure, not a chip: it is a quantity, and a box around it
+     would claim it is a state like the four that are */
+  .proj__out--figure{font-size:20px;letter-spacing:.02em;}
+
+  .case{grid-template-columns:1fr;gap:13px;padding:14px 14px 16px;}
+  .metric{font-size:30px;}
+  .metric--word{font-size:20px;}
+
+  /* ── info ────────────────────────────────────────────────────────────
+     Email stops being row one of a five-row list and becomes the control
+     the screen exists for. The two rows that are NOT links lose their box
+     entirely: 11-contact.css:11-19 makes the underline the affordance
+     that separates the three links from the two spans, and three boxes
+     with one style would put that back to square one. */
+  .info{align-items:stretch;}
+  .contact{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:26px;}
+  .contact__row--primary{
+    position:relative;grid-column:1/-1;
+    border:1px solid var(--accent);padding:10px 38px 12px 13px;
+  }
+  /* "/ \"\"" gives the caret an empty accessible name, so it is an
+     affordance rather than something read out after the address. */
+  .contact__row--primary::after{
+    content:"\25B6" / "";position:absolute;right:13px;top:50%;
+    transform:translateY(-50%);color:var(--accent);font-size:11px;
+  }
+  .contact__row--primary .contact__v{font-size:15px;}
+  .contact__row--pair{position:relative;border:1px solid rgba(255,255,255,.26);padding:8px 11px 10px;}
+  .contact__row--pair .contact__v{font-size:13px;}
+  /* the whole plate is the target, not the text inside it — 2.5.8 */
+  .contact__row--primary .contact__v--link::before,
+  .contact__row--pair .contact__v--link::before{content:"";position:absolute;inset:0;}
+  .contact__row--plain{
+    grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;
+    gap:14px;padding:9px 2px 10px;border-top:1px solid rgba(255,255,255,.15);
+  }
+  .contact__row--plain .contact__k{margin-bottom:0;}
+  .contact__row--plain .contact__v{font-size:12.5px;text-align:right;}
+  .info__note{margin-top:20px;font-size:11px;}
+}
+
+/* ── a phone on its side ───────────────────────────────────────────────
+   Own block, not a patch: the :root above is (0,1,0) and later in the
+   file than the old shared landscape rule was, so a landscape tier that
+   did not restate --hdr-h/--ftr-h would inherit the portrait reservation
+   on a 393px-tall screen. */
+@media (max-width:1000px) and (max-height:480px){
+  :root{
+    --pad-x:22px;
+    --hdr-h:calc(52px + env(safe-area-inset-top));
+    --ftr-h:calc(60px + env(safe-area-inset-bottom));
+  }
+  .hdr{padding-top:calc(9px + env(safe-area-inset-top));}
+  .tel{top:calc(14px + env(safe-area-inset-top));}
+  .ftr{top:calc(11px + env(safe-area-inset-top));}
+  .hdr__right{padding:6px 10px calc(6px + env(safe-area-inset-bottom));}
+  .tab__box{padding:4px 2px 6px;font-size:14px;}
+  .display--xl{font-size:clamp(28px,4.4vw,40px);}
+  .display--lg{font-size:clamp(26px,4.4vw,40px);}
+
+  /* There is width here and there is no height at all, so the portrait
+     goes back to being a column beside the copy: full-bleed across a
+     393px-tall screen leaves nothing underneath it. order:1 rather than
+     the portrait tier's -1 — the copy leads when they are side by side. */
+  .home{flex-direction:row;align-items:center;gap:20px;}
+  .home__copy{margin-top:0;flex:1 1 auto;}
+  .feed{order:1;flex:none;width:min(190px,42vh);margin-inline:0;}
+  .feed__frame{aspect-ratio:4/5;clip-path:polygon(0 0,100% 0,100% 88%,88% 100%,0 100%);}
+  .feed__grad{background:linear-gradient(140deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.4));}
+  /* 284px of copy against a 277px box put INITIATE CONTACT under the
+     nav at rest. The slab and the three margins give back 24px. */
+  .slab{font-size:clamp(17px,2.9vw,25px);}
+  .slab-lines{gap:6px;}
+  .lede{font-size:12.5px;margin-top:10px;line-height:1.6;}
+  .rolerow{margin:6px 0 10px;}
+  .ctarow{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px;}
+  .btn--solid,.btn--ghost{font-size:15px;padding:8px 16px 10px;}
+
+  .hook{min-height:auto;}
+  .creed{font-size:17px;}
+
+  /* INFO stacked is 368px against a 281px box, which put both profile
+     links under the nav at rest. There are 808px of width here and no
+     height, so the four lines and the contact block sit side by side.
+     .slab-lines--c .slab is (0,2,0) and does not hear a .slab rule. */
+  .info{flex-flow:row wrap;align-items:flex-start;gap:0 28px;}
+  .info > .slab-lines{flex:1 1 40%;}
+  .slab-lines--c .slab{font-size:clamp(17px,2.4vw,23px);}
+  .contact{flex:1 1 46%;margin-top:2px;gap:8px;}
+  .info__note{flex:0 0 100%;margin-top:12px;}
+}
+
+/* ── small phones ──────────────────────────────────────────────────────
+   380px and under: iPhone SE at 375, the 360px Android floor. Above this
+   the rules in the main block already fit. */
+@media (max-width:380px){
+  :root{--pad-x:15px;}
+  /* 'INDEX // 001 - SYSTEM ONLINE' is 30 characters; at 13px/.24em it
+     is 327px wide against 330px of content and wrapped, taking the
+     headline down with it. */
+  .eyebrow{font-size:11.5px;letter-spacing:.16em;}
+  .brand__word{font-size:13px;}
+  .tab__box{font-size:14px;padding:6px 1px 8px;}
+  .tab__n{font-size:8px;}
+  .btn--solid,.btn--ghost{font-size:15.5px;padding:10px 14px 12px;}
+  .proj__btn{grid-template-columns:33px minmax(0,1fr) auto;gap:3px 9px;padding:10px 11px 11px;}
+  .proj__num{font-size:15px;}
+  .proj__name{font-size:15.5px;}
+  .proj__out{font-size:9px;}
+  /* 4/3 leaves HOME 25px taller than the box at 360x740 and put VIEW
+     BUILDS under the nav; 3/2 gives back 30. */
+  .feed__frame{aspect-ratio:3/2;}
+  .proj__out--figure{font-size:17px;}
+  .statline{gap:11px 20px;}
+  .contact__row--pair .contact__v{font-size:12px;}
+}

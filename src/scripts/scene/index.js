@@ -30,8 +30,8 @@ const MAX_DRIFT_STEP_MS = 100;
    there is nothing in a blurred gradient for the extra samples to resolve. */
 const DPR_CAP = 2;
 
-/* Same breakpoint as the CSS layout switch. */
-const NARROW = '(max-width:820px)';
+/* Same breakpoint as the CSS layout switch — src/styles/15-phone.css. */
+const NARROW = '(max-width:760px)';
 
 /* ── the field ── */
 /* The array is built once at the wide count and the narrow breakpoint simply

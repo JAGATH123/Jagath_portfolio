@@ -26,6 +26,9 @@
 .nav{display:flex;align-items:flex-start;gap:7px;}
 .tab{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;}
 .tab .jp{font-size:9px;opacity:.7;}
+/* the plate number is phone-tier furniture; here it would just widen
+   an inline-flex box that the nav has no room to give. */
+.tab__n{display:none;}
 .tab__box{
   position:relative;display:inline-flex;align-items:center;
   padding:7px 22px 10px;border:2px solid var(--accent);color:var(--accent);
@@ -33,7 +36,7 @@
   clip-path:polygon(11% 0,100% 0,100% 70%,92% 100%,0 100%,0 26%);
   transition:background .16s ease;
 }
-.tab:hover .tab__box{background:rgba(255,255,255,.07);}
+@media (hover:hover){.tab:hover .tab__box{background:rgba(255,255,255,.07);}}
 .tab__box::before{content:"";position:absolute;inset:0;background:var(--accent);opacity:0;transition:opacity .2s ease;}
 .tab__t{position:relative;white-space:nowrap;}
 .nav__cap{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.06em;text-shadow:var(--sh-cap);}

@@ -46,17 +46,17 @@
    grade, and was carried entirely by hue — it failed 1.4.11 for the
    indicator and 1.4.1 for being colour-only. Now, measured in all five
    grades, three renders each:
-     · #fff label on the wash  4.7–6.7:1 (1.4.3). The wash sits on an
+     · #fff label on the wash  4.7–8.1:1 (1.4.3). The wash sits on an
                                OPAQUE base. Over the bare canvas the same
                                colour measured 3.9:1 in one frame and 4.5:1
                                in the next, and EMBER dipped to 4.3 — the
                                label's contrast depended on which blob had
                                drifted behind it. The base makes it a fixed
                                property of the grade instead of a draw.
-     · the solid 4px bar       5.1–10.7:1 against the header (1.4.11), and
+     · the solid 4px bar       4.7–10.7:1 against the header (1.4.11), and
                                a SHAPE, present or absent, which is what
                                1.4.1 asks for. This is the state indicator.
-     · the .55 wash itself     2.5–3.5:1 against a resting tab: a secondary
+     · the .55 wash itself     2.4–3.5:1 against a resting tab: a secondary
                                cue, deliberately not the one carrying 1.4.11.
    The label inverts to #fff because the wash could not simply be turned
    up on its own: accent-on-accent falls apart.

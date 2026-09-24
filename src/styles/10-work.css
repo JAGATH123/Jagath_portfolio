@@ -31,9 +31,9 @@
      at rest. rgba(255,255,255,.18) measured 1.61:1 against the panel it
      sits on. .38 measures ~3.5:1 over the darkest backdrop the canvas
      produces and ~3.1:1 over the brightest, so it clears 3:1 across the
-     whole drift cycle and the four grades it was measured in. Ash, added
-     later, sits inside that range: its brightest blob is dimmer than
-     coolant's and its backdrop is as dark as any. */
+     whole drift cycle and the four grades it was measured in. Infrared,
+     added later, sits inside that range: its brightest blob is dimmer
+     than coolant's and its backdrop is as dark as any. */
   border:1px solid rgba(255,255,255,.38);background:rgba(6,8,14,.62);
   transition:border-color .18s ease,background .18s ease,transform .18s ease;
   clip-path:polygon(0 0,100% 0,100% 70%,99% 100%,1% 100%,0 58%);

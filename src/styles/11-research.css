@@ -5,6 +5,8 @@
    recolour with the screen like the rest of the page. The one exception is
    --fig-warn: it means "this is the expensive path", which is true in every
    grade, and a cost that changed colour per screen would read as decoration.
+   Amber, not red: the screen's own accent is red, and the expensive path
+   and the system's path must never read as the same colour.
 
    Figure animation is CSS keyframes and not SMIL, deliberately.
    17-reduced-motion.css disables animation with a `*` rule, which reaches
@@ -13,7 +15,7 @@
    figure complete rather than blank. */
 
 /* ─────────── RESEARCH ─────────── */
-.rsr{max-width:1080px;--fig-warn:#ff8a73;}
+.rsr{max-width:1080px;--fig-warn:#ffb347;}
 .screen--research{padding-block:var(--hdr-h) var(--ftr-h);}
 .rsr__lede{
   max-width:68ch;margin:18px 0 0;

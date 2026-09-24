@@ -1,4 +1,4 @@
-/* 14-tablet.css
+/* 15-tablet.css
    761px to 1150px, plus the two queries that belong to no single tier:
    the gutter step below 1150, and short viewports at any width above the
    phone tier.
@@ -68,18 +68,18 @@
   }
 }
 
-/* Portrait: .feed is flex:none, so two columns leave .home__copy 206px
+/* Portrait: .lat is flex:none, so two columns leave .home__copy 206px
    at 768 and 258px at 820 — against a display word 365px wide that
    cannot wrap and is silently clipped by #root{overflow:hidden}. */
 @media (min-width:761px) and (max-width:1150px) and (min-height:481px) and (orientation:portrait){
   /* stretch, explicitly: in a column flex, align-items:center shrinks
      .home__copy to max-content instead of filling the gutter. */
   .home{flex-direction:column;align-items:stretch;gap:22px;}
-  /* 328px of portrait under 620px of copy reads as an afterthought, and
-     anything wider pushes it under the footer bar on the shortest tablet
-     in the band. A 768x1024 iPad has a 764px box: 386 of copy + 22 of
-     gap + 359 of portrait (28vh wide, 4/5 tall) is 767. */
-  .feed{width:min(300px,28vh);}
+  /* A full-width band under the copy. A 768x1024 iPad has a 764px box
+     after the chrome and ~411 of it is copy; a 568px band at 11/4 is 207
+     tall, so the field clears the footer bar at rest. */
+  .lat{width:100%;}
+  .lat__frame{aspect-ratio:11/4;}
 }
 
 /* ═══════════════════ SHORT VIEWPORTS ═══════════════════
@@ -97,4 +97,15 @@
   .nav__cap{display:none;}
   .ftr__actcol .jp{display:none;}
   .display--xl{font-size:clamp(34px,5vw,64px);}
+}
+
+/* ── research ──────────────────────────────────────────────────────────
+   The figures are 1000 units wide with 9.5px labels in them. Scaled to a
+   768px column that lands under 7px, which is unreadable — so below the
+   desktop band they stop scaling and start scrolling. A diagram that
+   reflows loses the residual loop; a diagram you drag stays a diagram. */
+@media (min-width:761px) and (max-width:1150px) and (min-height:481px){
+  .fig__frame{overflow-x:auto;overscroll-behavior-x:contain;padding:16px;}
+  .fig__svg{min-width:860px;}
+  .rsr__nums{gap:16px 30px;}
 }

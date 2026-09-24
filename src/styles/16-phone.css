@@ -1,4 +1,4 @@
-/* 15-phone.css
+/* 16-phone.css
    Everything at 760px and below. This tier is self-contained: it does not
    layer on top of the tablet file, it replaces it, so every declaration a
    phone needs is here even where the tablet asks for the same thing.
@@ -51,6 +51,16 @@
     background-position:0 0,0 0,100% 0,100% 0;
   }
 
+  /* The screens scroll under the header exactly as they do under the nav,
+     and the header had no base: 30-40% of a scrolled paragraph showed
+     through the brand row. z 18 sits above .main and the rails and below
+     .tel (19), .hdr/.ftr (20) and the frame (21). */
+  #root::before{
+    content:"";position:absolute;top:0;left:0;right:0;z-index:18;pointer-events:none;
+    height:var(--hdr-h);
+    background:linear-gradient(to bottom,rgba(5,6,10,.95) calc(100% - 20px),rgba(5,6,10,0));
+  }
+
   /* ── shared ── */
   .slab{padding:3px 11px 7px;}
   .slab-lines--c{align-items:flex-start;text-align:left;}
@@ -94,7 +104,7 @@
     font-size:9.5px;letter-spacing:.14em;
   }
   .tel b{display:none;}
-  .tel__i:nth-child(n+2):nth-child(-n+4){display:none;}
+  .tel__i--clock,.tel__i--up,.tel__i--fps{display:none;}
   .tel .dot{width:5px;height:5px;}
 
   /* ── the sound toggle ────────────────────────────────────────────────
@@ -118,8 +128,8 @@
      is 72px tall at the top of the screen. Fixed measures against the
      viewport. It stays where it is in the DOM, before <main>: 1.3.2 wants
      a meaningful reading sequence and nav-then-content is one. C27
-     (match DOM to visual order) is advisory, and router.js:121 already
-     moves focus into the screen on every navigation, so "focus is at the
+     (match DOM to visual order) is advisory, and router.js already hands
+     focus to the new section on every navigation, so "focus is at the
      bottom, then jumps to the content" is the established pattern here. */
   .hdr__right{
     position:fixed;left:0;right:0;bottom:0;top:auto;z-index:22;
@@ -132,7 +142,10 @@
     backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
     border-top:1px solid rgba(255,255,255,.1);
   }
-  .nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;align-items:stretch;}
+  /* minmax(0,·) and not 1fr: 1fr floors at min-content, and .tab__t is
+     nowrap, so at five plates the last one was pushed past the viewport
+     edge and became unreachable rather than narrow. */
+  .nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;align-items:stretch;}
   .tab{width:100%;}
   .tab .jp{display:none;}
   .tab__box{
@@ -140,7 +153,7 @@
     width:100%;padding:8px 2px 10px;border-width:1px;font-size:15.5px;
     clip-path:polygon(0 0,100% 0,100% 64%,86% 100%,0 100%);
   }
-  /* same reason as .tab__t at 06-header-rails.css:38 — .tab__box::before
+  /* same reason as .tab__t in 06-header-rails.css — .tab__box::before
      is an absolutely positioned accent fill, and an unpositioned inline
      child is painted underneath it. At opacity 1 that is not "washed
      out", it is "not rendered". */
@@ -154,7 +167,8 @@
      --accent is the pair .role and .btn--solid already use and measures
      8.4:1 (coolant) to 11.6:1 (ember) across the four grades — better
      than the 4.4-6.2:1 the white-on-wash version managed.
-     Specificity must match 06-header-rails.css:56-64 at (0,3,x) or none
+     Specificity must match the .tab[aria-current] rules in
+     06-header-rails.css at (0,3,x) or none
      of this applies. */
   .tab[aria-current="page"] .tab__box::before{opacity:1;}
   .tab[aria-current="page"] .tab__box{color:var(--ink);box-shadow:none;}
@@ -168,40 +182,37 @@
      Column flex with align-items:flex-start does NOT stretch children,
      which overflows the gutter — hence stretch, explicitly. */
   .home{flex-direction:column;align-items:stretch;gap:0;}
-  /* -58 and not more: the crossing has to put the <h1> on the frame and
-     the eyebrow BELOW it. At -84 the 13px eyebrow landed at 74% of the
-     frame, where the gradient has not closed yet, and measured 2.5:1 on
-     the shirt — a 1.4.3 failure at that size. */
-  .home__copy{position:relative;z-index:2;width:100%;min-width:0;margin-top:-58px;}
-  /* The portrait leads: it is the one full-bleed moment and it cannot
-     arrive four screenfuls below the name. Only the paint order moves —
-     .feed holds nothing focusable, so the tab order is untouched, and a
-     screen reader still meets the <h1> before the image, which is the
-     right order to hear it in. */
-  .feed{order:-1;flex:none;width:auto;max-width:none;margin-inline:calc(var(--pad-x) * -1);}
-  .feed__cap,.feed__meta{display:none;}
-  .feed__frame{
-    /* aspect-ratio is the ONLY height source here: the <img> is
+  /* -78: the eyebrow is two lines since the copy pass, and at -58 its
+     second line crossed the frame's diagonal onto the open canvas and
+     measured 3.8:1 there. Both lines now sit inside the frame, on the
+     scrim, and only the <h1> straddles the break — as intended. */
+  .home__copy{position:relative;z-index:2;width:100%;min-width:0;margin-top:-78px;}
+  /* The field leads: it is the one full-bleed moment and it cannot arrive
+     four screenfuls below the name. Only the paint order moves — .lat is
+     decorative and holds nothing focusable, so the tab order is untouched
+     and a screen reader still meets the <h1> first. */
+  .lat{order:-1;flex:none;width:auto;max-width:none;margin-inline:calc(var(--pad-x) * -1);}
+  .lat__cap,.lat__meta{display:none;}
+  .lat__frame{
+    /* aspect-ratio is the ONLY height source here: the <svg> is
        position:absolute. `auto` collapses the frame to 0. */
     aspect-ratio:4/3;border:0;box-shadow:none;
     /* the diagonal break the name lands on */
     clip-path:polygon(0 0,100% 0,100% 87%,0 100%);
   }
-  /* .display carries no text-shadow anywhere in the site, because the
-     display type sits on a canvas whose brightness the site controls.
-     Over a photograph it does not, so the crossing gets both: a real
-     gradient under the name and a shadow on it. */
-  .feed__grad{background:linear-gradient(to bottom,rgba(0,0,0,0) 30%,rgba(5,6,10,.42) 58%,rgba(5,6,10,.9) 80%,rgba(5,6,10,.99));}
+  /* .display carries no text-shadow anywhere else in the site, because the
+     display type sits on a canvas whose brightness the site controls. Here
+     it crosses a field whose live cells reach --accent2, so the crossing
+     gets both: a real scrim under the name and a shadow on it. */
+  .lat__frame::after{background:linear-gradient(to bottom,rgba(0,0,0,0) 26%,rgba(5,6,10,.62) 54%,rgba(5,6,10,.95) 70%,rgba(5,6,10,.99));}
   .home__copy .display,.home__copy .eyebrow{text-shadow:var(--sh-copy);}
   .crn{display:none;}
-  /* mirror of the 34px that used to clear .crn--tl */
-  .feed__rec{top:15px;left:auto;right:18px;}
 
   .rolerow{gap:7px 10px;margin:11px 0 16px;}
   .role__sub{font-size:10.5px;letter-spacing:.13em;}
   .ctarow{flex-direction:column;align-items:stretch;gap:10px;margin-top:20px;}
   /* clip-path stays OFF this selector: at (0,2,0) it would beat
-     .btn:focus-visible{clip-path:none} (03-base.css:22, same specificity,
+     .btn:focus-visible{clip-path:none} (03-base.css, same specificity,
      earlier file) and clip the focus ring away. */
   .ctarow .btn{justify-content:center;}
   .btn--solid,.btn--ghost{font-size:16.5px;padding:11px 18px 13px;}
@@ -227,7 +238,7 @@
      body copy in the same white — at this size the two competed instead
      of one concluding the other. A dark plate separates them without
      making it louder. The padding shorthand also drops the 30ch measure
-     that 09-about.css:41-45 builds out of padding-right, which is correct
+     that .creed in 09-about.css builds out of padding-right, which is correct
      here: 30ch of 19px display type is narrower than the screen. */
   .creed{
     margin-top:24px;padding:15px 15px 17px;
@@ -279,7 +290,7 @@
   /* ── info ────────────────────────────────────────────────────────────
      Email stops being row one of a five-row list and becomes the control
      the screen exists for. The two rows that are NOT links lose their box
-     entirely: 11-contact.css:11-19 makes the underline the affordance
+     entirely: .contact__v--link in 12-contact.css makes the underline the affordance
      that separates the three links from the two spans, and three boxes
      with one style would put that back to square one. */
   .info{align-items:stretch;}
@@ -328,26 +339,38 @@
   .display--xl{font-size:clamp(28px,4.4vw,40px);}
   .display--lg{font-size:clamp(26px,4.4vw,40px);}
 
+  /* The copy is taller than a 393px-tall screen's box, and the primary
+     button was landing under the nav at rest. The slab and the three
+     margins give back the difference. */
+  .slab{font-size:clamp(17px,2.9vw,25px);}
+  .slab-lines{gap:6px;}
+  /* On a 667px-wide phone the copy column is ~430px. At portrait sizes the
+     eyebrow took two lines there and the role row two rows, which is what
+     put both buttons under the nav at rest. */
+  .home__copy .eyebrow{font-size:11px;letter-spacing:.12em;}
+  .role__sub{font-size:9.5px;letter-spacing:.1em;}
+  .lede{font-size:12.5px;margin-top:10px;line-height:1.6;}
+  .rolerow{margin:6px 0 10px;}
+  .btn--solid,.btn--ghost{font-size:15px;padding:8px 16px 10px;}
+
+  .hook{min-height:auto;}
+  .creed{font-size:17px;}
+}
+
+/* Side by side needs the width to be side by side in. At 320x256 — which
+   is what a 1280px desktop becomes at 400% zoom, the case WCAG 1.4.10 is
+   written for — the two-column home put the copy in a 157px column. */
+@media (min-width:560px) and (max-width:1000px) and (max-height:480px){
   /* There is width here and there is no height at all, so the portrait
      goes back to being a column beside the copy: full-bleed across a
      393px-tall screen leaves nothing underneath it. order:1 rather than
      the portrait tier's -1 — the copy leads when they are side by side. */
   .home{flex-direction:row;align-items:center;gap:20px;}
   .home__copy{margin-top:0;flex:1 1 auto;}
-  .feed{order:1;flex:none;width:min(190px,42vh);margin-inline:0;}
-  .feed__frame{aspect-ratio:4/5;clip-path:polygon(0 0,100% 0,100% 88%,88% 100%,0 100%);}
-  .feed__grad{background:linear-gradient(140deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.4));}
-  /* 284px of copy against a 277px box put INITIATE CONTACT under the
-     nav at rest. The slab and the three margins give back 24px. */
-  .slab{font-size:clamp(17px,2.9vw,25px);}
-  .slab-lines{gap:6px;}
-  .lede{font-size:12.5px;margin-top:10px;line-height:1.6;}
-  .rolerow{margin:6px 0 10px;}
+  .lat{order:1;flex:none;width:min(200px,44vh);margin-inline:0;}
+  .lat__frame{aspect-ratio:11/7;clip-path:polygon(0 0,100% 0,100% 88%,88% 100%,0 100%);}
+  .lat__frame::after{background:linear-gradient(140deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.4));}
   .ctarow{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px;}
-  .btn--solid,.btn--ghost{font-size:15px;padding:8px 16px 10px;}
-
-  .hook{min-height:auto;}
-  .creed{font-size:17px;}
 
   /* INFO stacked is 368px against a 281px box, which put both profile
      links under the nav at rest. There are 808px of width here and no
@@ -360,15 +383,25 @@
   .info__note{flex:0 0 100%;margin-top:12px;}
 }
 
+/* Narrow AND short is zoomed, not a phone on its side: one column, and no
+   field. It is aria-hidden ornament, and at this size it is only in the way. */
+@media (max-width:559px) and (max-height:480px){
+  .lat{display:none;}
+  .home__copy{margin-top:0;}
+}
+
 /* ── small phones ──────────────────────────────────────────────────────
    380px and under: iPhone SE at 375, the 360px Android floor. Above this
    the rules in the main block already fit. */
 @media (max-width:380px){
   :root{--pad-x:15px;}
-  /* 'INDEX // 001 - SYSTEM ONLINE' is 30 characters; at 13px/.24em it
-     is 327px wide against 330px of content and wrapped, taking the
-     headline down with it. */
+  /* At 13px/.24em a mono eyebrow costs ~11px a character, so even a
+     30-character one fills 330px of content. Smaller here keeps the long
+     ones to two balanced lines instead of three. */
   .eyebrow{font-size:11.5px;letter-spacing:.16em;}
+  /* five lines at 13.5px pushed OPEN THE WORK under the nav at 360x740 */
+  .lede{font-size:12.5px;line-height:1.65;}
+  .ctarow{gap:8px;margin-top:16px;}
   .brand__word{font-size:13px;}
   .tab__box{font-size:14px;padding:6px 1px 8px;}
   .tab__n{font-size:8px;}
@@ -379,8 +412,88 @@
   .proj__out{font-size:9px;}
   /* 4/3 leaves HOME 25px taller than the box at 360x740 and put VIEW
      BUILDS under the nav; 3/2 gives back 30. */
-  .feed__frame{aspect-ratio:3/2;}
+  .lat__frame{aspect-ratio:3/2;}
   .proj__out--figure{font-size:17px;}
   .statline{gap:11px 20px;}
   .contact__row--pair .contact__v{font-size:12px;}
+}
+
+/* ── research ──────────────────────────────────────────────────────────
+   Long-form prose and three wide diagrams on a 393px screen. The prose
+   reflows; the diagrams do not. Scaling a 1000-unit figure into 357px
+   puts its labels at 3.4px, so each one becomes a horizontal strip the
+   reader drags instead — the residual loop in Fig 2 and the node-for-node
+   correspondence between Fig 2 and Fig 3 are the content, and a column
+   reflow destroys both. */
+@media (max-width:760px),(max-width:1000px) and (max-height:480px){
+  .screen--research{padding-block:var(--hdr-h) var(--ftr-h);}
+  .rsr__lede{font-size:13px;line-height:1.7;max-width:none;}
+  .rsr p{font-size:12.5px;line-height:1.75;max-width:none;}
+  .rsr__h{font-size:19px;gap:10px;margin-bottom:14px;}
+  .rsr__n{font-size:10.5px;}
+  .rsr__sub{margin:26px 0 10px;font-size:11px;}
+  .rsr__block{margin-top:40px;padding-top:22px;}
+  .chips{gap:6px;}
+  .chips li{font-size:9.5px;padding:3px 7px 4px;}
+  .rsr__hyp{font-size:16px!important;padding:14px 15px 16px;}
+  .rsr__nums{gap:14px 24px;}
+  .rsr__nums dt{font-size:21px;}
+  .rsr__nums dd{font-size:10.5px;max-width:18ch;}
+  .rsr__steps,.rsr__blockers{padding-left:18px;max-width:none;}
+  .rsr__steps li,.rsr__blockers li{font-size:12.5px;}
+  .rsr__cite{margin-top:38px;}
+
+  .fig{margin:22px 0 26px;}
+  .fig__frame{
+    overflow-x:auto;overscroll-behavior-x:contain;
+    padding:13px 14px;margin-inline:calc(var(--pad-x) * -1);
+    border-left:0;border-right:0;clip-path:none;
+  }
+  .fig__svg{min-width:780px;}
+  .fig__cap{font-size:11.5px;line-height:1.65;}
+  /* the strip scrolls, and on a phone nothing else on the page does
+     sideways — so say so once rather than hope it is discovered */
+  .fig__frame::after{
+    content:"drag →" / "";position:sticky;left:0;display:block;
+    margin-top:6px;font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+    color:color-mix(in srgb,var(--accent) 70%,transparent);
+  }
+}
+
+/* ── short phones, upright ─────────────────────────────────────────────
+   A 667px-tall phone (iPhone SE) has a 517px box once the chrome is
+   reserved, and a 3/2 field took 250 of it: both buttons landed under the
+   nav at rest. A 5/2 band gives back 100px.
+
+   The pull-up shrinks with the frame, and the window it has to sit in is
+   narrow. The eyebrow must start in the bottom 30% of the frame, where
+   the scrim has reached .95 — higher than that and a lit cell behind it
+   drops below 4.5:1 — and it must END above the diagonal, or it crosses
+   onto the open canvas. On a 150px band that is 27px to 45px; 40 is
+   inside both.
+
+   orientation:portrait keeps this off a phone on its side, which is
+   under 700px tall too and has a layout of its own. */
+@media (max-width:760px) and (max-height:700px) and (orientation:portrait){
+  .lat__frame{aspect-ratio:5/2;}
+  .home__copy{margin-top:-40px;}
+  .rolerow{margin:8px 0 12px;}
+  .slab-lines{gap:5px;}
+  .lede{margin-top:12px;}
+  .ctarow{gap:7px;margin-top:14px;}
+}
+
+/* ── the 320px class ───────────────────────────────────────────────────
+   A 4-inch phone, or a larger one with Display Zoom on. Long eyebrows fit
+   one line at this size, and the lede drops a line. */
+@media (max-width:340px){
+  .eyebrow{font-size:10.5px;letter-spacing:.1em;}
+  .lede{font-size:12px;line-height:1.6;}
+}
+/* ...and if it is also a short one, the field band goes: a 568px screen has
+   431px of box, and the band's net 88px was what put both buttons under
+   the nav. It is decoration; the two actions are not. */
+@media (max-width:340px) and (max-height:600px) and (orientation:portrait){
+  .lat{display:none;}
+  .home__copy{margin-top:0;}
 }

@@ -94,6 +94,53 @@ for prop, value in (("--accent", "#6eb0ff"), ("--accent2", "#baeeff"),
                       "coolant grade, so the page is coloured with JS off")
 check("load-bearing CSS still present", guards)
 
+# Each stylesheet partial names itself on its first line. Order lives in
+# main.css.order and the numeric prefixes only mirror it, so a renumbering
+# that forgets the self-names leaves every header comment pointing at a file
+# that is not there. Seven had drifted at once.
+css = (DIST / "assets/css/main.css").read_text(encoding="utf-8")
+check("every stylesheet partial names itself correctly", [
+    f"{built} begins by calling itself {claims}"
+    for built, claims in re.findall(r"/\* ── (\S+\.css) ── \*/\n/\* (\S+\.css)", css)
+    if built != claims
+])
+
+# ── the three ways a new screen goes wrong quietly ──────────────────────
+index = strip_comments((DIST / "index.html").read_text(encoding="utf-8"))
+
+# 1. A screen with no tab is reachable only by typing the hash; a tab with no
+#    screen is a dead click. router.js derives its routes from the sections,
+#    so neither shows up as an error anywhere.
+screens = re.findall(r'<section class="screen[^"]*" id="([^"]+)"', index)
+tabs = re.findall(r'<a class="tab" data-nav="([^"]+)" href="#([^"]+)"', index)
+problems = [f"screen #{s} has no tab" for s in screens if s not in [t[1] for t in tabs]]
+problems += [f'tab "{n}" points at #{h}, which is not a screen' for n, h in tabs if h not in screens]
+problems += [f'tab "{n}" data-nav does not match href #{h}' for n, h in tabs if n != h]
+check("every screen has a tab and every tab has a screen", problems)
+
+# 2. scene/index.js returns silently on an unknown grade, so a typo in
+#    data-grade leaves the new screen wearing the previous screen's colours
+#    and nothing anywhere says so.
+grades_js = (DIST / "assets/js/scene/grades.js").read_text(encoding="utf-8")
+known = set(re.findall(r"^\s{2}(\w+):\s*\{", grades_js, re.M))
+used = set(re.findall(r'data-grade="([^"]+)"', index))
+check("every data-grade exists in GRADES",
+      [f"{g} is not in grades.js ({', '.join(sorted(known))})" for g in sorted(used - known)])
+
+# 3. &text= is request-global and build.py now derives it, so this only fails
+#    if that derivation breaks — which is exactly when nobody would notice,
+#    because the page still renders, just in a fallback face mid-word.
+import urllib.parse
+subset = re.search(r"text=([^\"&\s]+)", index)
+cjk = set(re.findall(r"[\u3040-\u30ff\u4e00-\u9fff]", index))
+if subset:
+    have = set(urllib.parse.unquote(subset.group(1)))
+    check("every CJK character is in the font subset",
+          [f"U+{ord(c):04X} {c} is on the page but not in &text=" for c in sorted(cjk - have)])
+elif cjk:
+    check("every CJK character is in the font subset",
+          ["the page has CJK but no &text= subset was emitted"])
+
 print()
 if failures:
     print(f"{len(failures)} check(s) failed")

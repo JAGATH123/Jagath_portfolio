@@ -16,6 +16,7 @@ body{
 img,svg,canvas{display:block;max-width:100%;}
 button{font:inherit;color:inherit;}
 ul,ol,dl,dd{margin:0;padding:0;list-style:none;}
-/* h4 is here because the case panels use it; `figure` has left because
-   the portrait is a <div> now and nothing in the markup is a figure. */
-h1,h2,h3,h4,p{margin:0;}
+/* h4 is here because the case panels use it. `figure` is back: the research
+   screen is made of them, and the UA default is 1em/40px of side margin that
+   would knock all three diagrams out of the text column. */
+h1,h2,h3,h4,p,figure{margin:0;}

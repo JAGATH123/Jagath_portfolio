@@ -1,0 +1,89 @@
+{{! fig-channels.html — Fig 1. Drawn to scale on purpose: 1312:90 is 14.6:1,
+    and the lanes are 592px and 40px. Compressing the long lane to make the
+    figure tidy would delete the finding. }}
+          <figure class="fig" id="fig-1">
+            <div class="fig__frame">
+              <svg class="fig__svg f1" viewBox="0 0 1000 340" role="img" aria-labelledby="fig1-t fig1-d">
+                <title id="fig1-t">Text-to-text versus cache-to-cache, drawn on one time axis</title>
+                <desc id="fig1-d">The text route serialises: the Sharer decodes twelve tokens over
+                1312 milliseconds while the Receiver waits, then passes a string. The cache route
+                runs both prefills at once and fuses in 90 milliseconds, finishing in a fraction of
+                the width.</desc>
+
+                <text class="fig__lane" x="0" y="14">TEXT-TO-TEXT</text>
+                <g class="f1__a">
+                  <rect class="fig__box" x="0" y="26" width="86" height="52"></rect>
+                  <text class="fig__t" x="43" y="49">SHARER</text>
+                  <text class="fig__s" x="43" y="65">prefill</text>
+
+                  <rect class="fig__box" x="96" y="26" width="592" height="52"></rect>
+                  <g class="f1__toks">
+                    <rect class="f1__tok" x="104" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="153" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="202" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="251" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="300" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="349" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="398" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="447" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="496" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="545" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="594" y="34" width="41" height="36"></rect>
+                    <rect class="f1__tok" x="643" y="34" width="41" height="36"></rect>
+                  </g>
+                  <text class="fig__s" x="392" y="20">DECODE · one token at a time</text>
+
+                  {{! the pinch: the string is drawn shorter than the boxes either side,
+                      so the semantic cost is spatial rather than annotated }}
+                  <rect class="fig__box fig__box--pinch" x="698" y="40" width="46" height="24"></rect>
+                  <text class="fig__t fig__t--sm" x="721" y="57">"…"</text>
+                  <text class="fig__s" x="721" y="78">string</text>
+
+                  <rect class="fig__box f1__rcv" x="754" y="26" width="96" height="52"></rect>
+                  <text class="fig__t" x="802" y="49">RECEIVER</text>
+                  <text class="fig__s" x="802" y="65">prefill</text>
+
+                  <rect class="fig__box fig__box--out f1__rcv" x="860" y="26" width="100" height="52"></rect>
+                  <text class="fig__t" x="910" y="56">ANSWER</text>
+                </g>
+                <text class="fig__big fig__big--warn" x="392" y="112">1312 ms</text>
+                <text class="fig__s fig__s--warn" x="392" y="130">serial — the Receiver is idle for all of it</text>
+
+                <line class="fig__rule" x1="0" y1="152" x2="1000" y2="152"></line>
+
+                <text class="fig__lane" x="0" y="184">CACHE-TO-CACHE</text>
+                <g class="f1__b">
+                  <rect class="fig__box f1__par" x="0" y="196" width="86" height="44"></rect>
+                  <text class="fig__t fig__t--sm" x="43" y="215">SHARER</text>
+                  <text class="fig__s" x="43" y="230">prefill</text>
+                  <rect class="fig__box f1__par" x="0" y="248" width="86" height="44"></rect>
+                  <text class="fig__t fig__t--sm" x="43" y="267">RECEIVER</text>
+                  <text class="fig__s" x="43" y="282">prefill</text>
+                  <text class="fig__s fig__a--l" x="0" y="310">no tokens emitted · one wall clock</text>
+
+                  <path class="fig__edge" d="M86 218 H 104"></path>
+                  <path class="fig__edge" d="M86 270 H 104"></path>
+                  <text class="fig__s fig__s--edge" x="95" y="211">KV</text>
+
+                  <rect class="fig__box fig__box--key f1__fuse" x="104" y="196" width="40" height="96"></rect>
+                  <text class="fig__t fig__t--v" x="124" y="244" transform="rotate(-90 124 244)">FUSER</text>
+
+                  <rect class="fig__box fig__box--out" x="160" y="222" width="100" height="44"></rect>
+                  <text class="fig__t" x="210" y="249">ANSWER</text>
+
+                  {{! the idle remainder — lane B is finished while lane A is still counting }}
+                  <line class="f1__idle" x1="266" y1="244" x2="960" y2="244"></line>
+                  <text class="fig__s" x="613" y="264">lane B has been finished since here</text>
+                </g>
+                <text class="fig__big fig__a--l" x="290" y="210">90 ms</text>
+                <text class="fig__s fig__a--l" x="290" y="230">parallel with the Receiver's own prefill</text>
+              </svg>
+            </div>
+            <figcaption class="fig__cap"><b>Fig 1.</b> Both routes move the same information. The
+            text route has to serialise it first: the Receiver cannot start until the Sharer has
+            finished decoding, so the cost is a <em>phase</em>, not a step. The cache route runs the
+            Sharer's prefill alongside the Receiver's own and fuses the result, and the
+            communication stops being something anyone waits for.
+            <span class="fig__hedge">One reported configuration; the paper's headline is a 2.5×
+            average speedup.</span></figcaption>
+          </figure>

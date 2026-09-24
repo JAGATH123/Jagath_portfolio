@@ -1,0 +1,298 @@
+    <section class="screen screen--research" id="research" data-grade="ash" aria-labelledby="research-h">
+      <div class="rsr">
+{{> partials/figures/defs.html }}
+
+        <p class="eyebrow"><span aria-hidden="true">▶</span> LAB // OPEN PROBLEM</p>
+        <h2 class="display display--lg ca" id="research-h">RESEARCH</h2>
+        <p class="rsr__lede">When two language models cooperate, they exchange text. That forces a
+        dense internal state through a token vocabulary, and it makes the second model wait on the
+        first one's decode loop. <em>Cache-to-Cache</em> showed the two can pass KV-cache instead.
+        My question is whether the space they meet in cares what modality the sender was.</p>
+
+        <ul class="chips" aria-label="Topics">
+          <li>KV-cache</li><li>Gumbel-sigmoid</li><li>terminal layer alignment</li>
+          <li>residual injection</li><li>head modulation</li><li>frozen towers</li>
+        </ul>
+
+        <!-- ─────────── 01 ─────────── -->
+        <section class="rsr__block" aria-labelledby="rsr-h1">
+          <h3 class="rsr__h" id="rsr-h1"><span class="rsr__n" aria-hidden="true">01</span> The interface is a string, and that costs twice</h3>
+
+          <p>Multi-model systems are built out of text. One model writes, the next model reads. The
+          interface is a string because a string is what every model already accepts — not because a
+          string is a good place to put a thought.</p>
+
+          <p>That choice costs twice, and the two costs are unrelated to each other. The first is
+          <em>semantic</em>. A model's working state at a given layer is dense, high-dimensional and
+          continuous. To hand it over as text it has to be collapsed onto a discrete vocabulary — a
+          few tens of thousands of symbols chosen to compress natural language, not to carry
+          activations. What survives is what the vocabulary happens to have a word for.</p>
+
+          <p>The second is <em>temporal</em>, and it is a property of the schedule rather than the
+          representation. Text has to be decoded one token at a time, and the receiving model cannot
+          begin until the sender has finished. Two models communicating in text are serialised by
+          construction, no matter how much hardware is sitting idle.</p>
+
+          <p class="rsr__kick">Naming them separately matters, because they have different fixes.
+          Better prompting addresses the first a little, and the second not at all.</p>
+
+{{> partials/figures/fig-channels.html }}
+        </section>
+
+        <!-- ─────────── 02 ─────────── -->
+        <section class="rsr__block" aria-labelledby="rsr-h2">
+          <h3 class="rsr__h" id="rsr-h2"><span class="rsr__n" aria-hidden="true">02</span> Prior work — deleting the string</h3>
+
+          <p>Two frozen models, a <b>Sharer</b> and a <b>Receiver</b>. Both prefill on the same
+          input. The Sharer's KV-cache is projected into the Receiver's and added to it. The Receiver
+          then decodes as normal, from a cache that now contains something it could not have computed
+          alone. The Sharer never emits a token.</p>
+
+          <p>Two things have to be true for that to work, and the paper establishes them separately
+          before building anything.</p>
+
+          <h4 class="rsr__sub">Oracle 1 — is a cache enrichable, holding length fixed?</h4>
+          <p>The obvious objection to "put more into the cache" is that more context helps because it
+          is more context. If that were the whole story there would be nothing to transfer; you would
+          just make the prompt longer. So the experiment holds length constant. One model, three
+          prefills on MMLU-Redux: the question alone; exemplars then the question; and — the oracle —
+          exemplars then the question, after which the exemplar segment of the cache is
+          <em>thrown away</em> and only the question-aligned slice is kept.</p>
+
+          <p>The third condition has exactly the same number of cache cells as the first. The only
+          difference is that those cells were computed while the exemplars were visible. Accuracy
+          goes from <b>58.42%</b> to <b>62.34%</b>.</p>
+
+          <p>That is the right experiment because it isolates the variable. The gain cannot be
+          attributed to sequence length, because sequence length did not change — so it has to be the
+          content of each cell. A cache cell has spare capacity. Which makes a cache a channel, not
+          just a buffer. A secondary finding, and the reason the final design has a gate: the effect
+          is not uniform across layers. Some improve, some get worse, and enriching only the best few
+          beat enriching all of them.</p>
+
+          <h4 class="rsr__sub">Oracle 2 — is a cache convertible between models?</h4>
+          <p>Enrichable is not enough. Two models have two different internal geometries; a cache
+          from one is not obviously a legal object for the other. The test is deliberately small:
+          a 3-layer MLP, no attention, no per-layer structure, trained with plain MSE to map
+          Qwen3-4B's cache onto Qwen3-0.6B's for the same input. Then look at where the mapped caches
+          land under t-SNE relative to the target's own.</p>
+
+          <p>They land inside. Not adjacent — inside the target's own representation manifold.</p>
+
+          <p>This is the right experiment because it is the <em>weakest sufficient</em> one. A
+          three-layer MLP has almost no capacity to be clever. If a mapping that simple finds the
+          target space, the two are related by something close to a learnable transform, and the
+          question stops being "is this possible" and becomes "what is the best architecture for it."
+          It also fails honestly: the mapped caches cover only a subset of the target's space.
+          Convertible is not the same as equivalent.</p>
+
+          <h4 class="rsr__sub">The Fuser</h4>
+          <p>One per layer. Both models stay frozen — the Fuser is the only thing trained. It
+          concatenates the Receiver's KV with the Sharer's aligned KV along the hidden dimension and
+          pushes the result through a projection and a feature-fusion layer. The concat is what makes
+          this fusion rather than translation: the module always sees what the Receiver already
+          knows, so it can learn to contribute the difference instead of restating it.</p>
+
+          <p>An input-aware head modulation layer then reweights the signal per attention head. Heads
+          specialise, and a Sharer strong on one kind of structure should not be injected uniformly
+          into heads doing something else. Because the weighting is a function of the input, the
+          routing changes per example rather than being baked in at training time.</p>
+
+          <p>Then the gate — a trainable scalar per layer, which is Oracle 1's layer-wise finding
+          turned into a parameter. The implementation is the interesting part. A hard threshold is
+          not differentiable, so it cannot be learned by gradient descent. A plain sigmoid is
+          differentiable but leaves you shipping a soft gate, so every layer stays permanently
+          half-injected and the model never commits. <b>Gumbel-sigmoid with temperature
+          annealing</b> gets both: smooth and trainable at high temperature, and as the temperature
+          anneals down over training — linearly, 1.0 to 0.001 — the gate hardens toward binary. You
+          train a soft gate and deploy a discrete one, without ever picking the threshold by hand.</p>
+
+{{> partials/figures/fig-fuser.html }}
+
+          <p>The output is <em>added</em> to the Receiver's cache, never substituted for it. Two
+          consequences: the Receiver's own computation is preserved, so the worst case is a Fuser
+          that learns to output near-zero and the system degrades to the Receiver alone; and it
+          composes with the gate, because a closed gate is exactly the identity.</p>
+
+          <p>Alignment is <b>terminal</b>. The two models rarely have the same depth, so C2C pairs
+          final layer with final layer, then penultimate with penultimate, walking backwards until
+          the shallower model runs out. The alternative is proportional — normalise both depths to
+          [0,1] and match nearest. Terminal wins, and the reason it should is that the last layer of
+          a next-token predictor has a fixed functional meaning in both models: it is the layer
+          adjacent to the output distribution. Depth fraction has no such anchor. Layer 0.5 of a
+          28-layer model and layer 0.5 of a 36-layer model are not doing the same job just because
+          the ratio matches.</p>
+
+          <p>Cross-family pairs do not share a tokeniser, and the residual add needs the caches to
+          line up cell for cell — so each Receiver token is decoded back to its string and re-encoded
+          with the Sharer's tokeniser, taking the token with maximal string coverage where one maps
+          to several. The two strategies agree on over 80% of sequences.</p>
+
+          <h4 class="rsr__sub">What it buys</h4>
+          <p>Across OpenBookQA, MMLU-Redux, ARC-Challenge and C-Eval, with LongBench for length
+          scaling, and pairs from 0.6B to 14B including cross-family combinations of Qwen, Llama and
+          Gemma:</p>
+          <dl class="rsr__nums">
+            <div><dt>+6.4–14.2%</dt><dd>average accuracy over the Receiver running alone</dd></div>
+            <div><dt>+3.1–5.4%</dt><dd>over the same two models communicating in text</dd></div>
+            <div><dt>2.5×</dt><dd>average latency speedup against text-to-text</dd></div>
+          </dl>
+          <p>Concretely, on MMLU-Redux a Qwen3-0.6B Receiver goes from 35.53% to 42.92%. The second
+          number is the one that shows what actually changed: the communication step stopped being a
+          serial phase. <span class="rsr__note">All figures above are from the v2 / ICLR'26 paper.
+          The reference repository still advertises the v1 numbers.</span></p>
+        </section>
+
+        <!-- ─────────── 03 ─────────── -->
+        <section class="rsr__block rsr__block--mine" aria-labelledby="rsr-h3">
+          <h3 class="rsr__h" id="rsr-h3"><span class="rsr__n" aria-hidden="true">03</span> The open question — mine</h3>
+
+          <p>Oracle 2 established that a <em>text</em> model's cache can be projected into another
+          <em>text</em> model's representation space, and that a three-layer MLP is enough to find
+          it. Nothing in that experiment identifies what made it work. It could be that the two
+          spaces are close because both towers are transformers trained on overlapping text. Or it
+          could be that the Receiver's cache space is not especially <em>about</em> text — that it is
+          a general-purpose slot for context that conditions the next token, and text is simply the
+          only thing anyone has ever put in it.</p>
+
+          <p class="rsr__hyp">A frozen vision encoder's patch representations can be projected into a
+          frozen LLM's KV-cache at an aligned layer, such that the injected cache is both
+          in-distribution for that LLM and causally load-bearing for its output — with no text
+          produced at any point in the inference path.</p>
+
+          <p>If that holds, the image never becomes tokens. No caption, no describe-then-reason round
+          trip, no second model waiting on the first one's decode. The visual information enters at
+          the same place the Sharer's did.</p>
+
+          <ul class="chips chips--mine" aria-label="My topic">
+            <li>patch grid → cache</li>
+          </ul>
+
+          <h4 class="rsr__sub">Two ways it can be wrong</h4>
+          <p>Falsifiable independently, and both have to be checked.
+          <b>Geometrically:</b> if the projected vision cache does not land inside the LLM's cache
+          manifold, and the separation survives any reasonable projector, the target space is
+          modality-specific and the hypothesis is dead.
+          <b>Causally:</b> if it lands inside but the answers are no better than under a norm-matched
+          shuffled cache, the projector has learned to be <em>plausible</em> rather than
+          <em>informative</em>, and the hypothesis is dead in a more annoying way.</p>
+
+          <p>The second is the one I take seriously. Oracle 2's t-SNE tests where a representation
+          sits, not whether anything downstream reads it. For C2C that gap was closed by end-to-end
+          accuracy. Cross-modally it has to be closed deliberately, which is why the shuffled-cache
+          control belongs in the minimal experiment rather than a follow-up.</p>
+
+          <h4 class="rsr__sub">The minimal experiment</h4>
+          <p>The vision analogue of "train a 3-layer MLP and look at the t-SNE" is not obvious,
+          because Oracle 2 had something this setting does not: a supervision target. There, both
+          models read the same string, so the target model's own cache for that string <em>is</em>
+          the ground truth. There is no ground-truth answer to "what would this LLM's cache be if it
+          had seen this image," because it cannot see images. The target has to be manufactured, and
+          the cheapest honest way to manufacture it is a caption.</p>
+
+          <ol class="rsr__steps">
+            <li>Take image–caption pairs. For each, prefill the frozen LLM on the caption alone and
+            record its KV-cache at the aligned layer. That is the regression target.</li>
+            <li>Run the frozen vision encoder on the image. Train a small projector — Oracle 2's
+            scale, a 3-layer MLP over pooled patch features, deliberately underpowered — with MSE
+            onto that target.</li>
+            <li><b>Geometric check.</b> t-SNE and CKA of projected-vision caches against the LLM's
+            real caption caches. Do they land inside?</li>
+            <li><b>Causal check.</b> Inject residually, ask a question about the image, and compare
+            against three controls: no injection; a norm-matched shuffled cache; and the projected
+            cache from a <em>different</em> image. Only the third separates "the model is using the
+            injection" from "the model is using the fact that something was injected."</li>
+          </ol>
+
+          <p>The caption is a training-time scaffold and appears nowhere at inference — the deployed
+          path is image → encoder → projector → cache. That is the point, and it is also the
+          experiment's main limitation, which I would rather state than have someone find:
+          <b>a caption-supervised projector can only transfer what a caption can express.</b> Its
+          ceiling is caption bandwidth, which is precisely the bottleneck the work is supposed to
+          remove. So the experiment can return a clean <em>no</em>, and it can return a
+          <em>yes, the spaces are compatible</em> — but it cannot demonstrate the upside. That needs
+          a different supervision signal, and I do not have one yet.</p>
+
+          <p>There is a cheaper pre-experiment, the analogue of Oracle 1: prefill the LLM on
+          [caption ⊕ question], discard the caption segment, keep the question slice. If the
+          question-only cache carries visual information forward at unchanged length, the capacity
+          exists before anyone builds a projector. If it does not, stop.</p>
+
+          <h4 class="rsr__sub">Why this is harder than the text-to-text case</h4>
+          <p>Four of C2C's components stop being well-defined. Not harder — undefined.</p>
+
+{{> partials/figures/fig-crossmodal.html }}
+
+          <ol class="rsr__blockers">
+            <li><b>There is no tokeniser alignment problem, because there is no tokeniser.</b> C2C
+            aligns by decoding a token to its string and re-encoding it with the other tokeniser.
+            Both towers consume the same string, so the correspondence is computable. A ViT consumes
+            a pixel grid. There is no string on its side. The correspondence does not exist to be
+            computed — it has to be learned, or the architecture has to stop needing one.</li>
+
+            <li><b>No token-level correspondence, which breaks the Fuser's shape.</b> C2C's Fuser is
+            position-wise: cell <i>n</i> of the Sharer concatenates with cell <i>n</i> of the
+            Receiver. Patch (i, j) of a 2D grid does not correspond to text position <i>n</i>, and no
+            reordering makes it. Either the patch grid is resampled to fixed slots before fusion, or
+            the Receiver's positions cross-attend into the grid. Both replace a cheap per-position
+            MLP with a sequence-mixing operation — so the latency argument, which is most of C2C's
+            case, has to be re-made rather than inherited.</li>
+
+            <li><b>"Terminal layer alignment" has no meaning when one tower is a ViT.</b> Terminal
+            alignment is justified because both models are next-token predictors, so their final
+            layers occupy the same functional position. A ViT's final layer is adjacent to a pooled
+            global embedding or a contrastive objective — a different job — and the most transferable
+            visual features are often not the last block. The principled prior C2C got for free
+            becomes a hyperparameter here, or a learned soft mixture over encoder layers.</li>
+
+            <li><b>A KV-cache is positional; a patch grid is positional differently.</b> K and V are
+            computed after positional encoding, so every cell asserts a position in a 1D causal
+            sequence. Patch embeddings carry 2D spatial position. Injecting a projected patch into
+            cell <i>n</i> is a claim that this visual content belongs at text position <i>n</i>,
+            which is not a claim anyone has grounds to make.</li>
+
+            <li><b>Sequence lengths are not close, and the residual add needs them equal.</b> A 224px
+            image at patch-14 is 256 patches; 336px is 576; tiling runs into the thousands. A
+            question prompt can be twenty tokens. C2C's padding trick assumes the two caches are
+            within reach of each other, and you cannot pad twenty cells to match 576. This is what
+            forces the decision in (2): the one-to-one residual form is structurally unavailable, so
+            resampling or attention-based routing is mandatory, not optional.</li>
+          </ol>
+
+          <h4 class="rsr__sub">What I don't know</h4>
+          <p><b>Is cache injection materially different from what a vision-language projector already
+          does?</b> The obvious objection, and it deserves a straight answer. LLaVA-style projectors
+          map visual features into the LLM's <em>input embedding</em> sequence — which still creates
+          tokens, just soft ones, and still pays prefill and attention cost for every one. Cache
+          injection targets K and V directly at each layer, adds residually to cells that already
+          exist, and extends the sequence by nothing. That is a real architectural difference.
+          Whether it is a difference that <em>buys</em> anything is exactly what I don't know, and I
+          would be suspicious of anyone who claimed to already.</p>
+
+          <p><b>What replaces caption supervision?</b> Task loss backpropagated through the frozen LLM
+          removes the caption ceiling, but it also removes what made Oracle 2 clean: an explicit
+          target to regress onto and a geometry to inspect. At that point the diagnostic is gone and
+          it is just end-to-end training.</p>
+
+          <p><b>Does a projector transfer across towers?</b> Much of C2C's credibility comes from
+          working across model families. I have no reason to expect one vision-encoder-to-LLM recipe
+          generalises to another pair, and if every pair needs its own projector the practical case
+          weakens considerably.</p>
+        </section>
+
+        <!-- ─────────── source ─────────── -->
+        <section class="rsr__cite" aria-labelledby="rsr-h4">
+          <h3 class="rsr__h rsr__h--sm" id="rsr-h4"><span class="rsr__n" aria-hidden="true">▪</span> Source</h3>
+          <p class="rsr__paper"><cite>Cache-to-Cache: Direct Semantic Communication Between Large
+          Language Models</cite><br>
+          Tianyu Fu, Zihan Min, Hanling Zhang, Jichao Yan, Guohao Dai, Wanli Ouyang, Yu Wang<br>
+          <a href="https://arxiv.org/abs/2510.03215" rel="noopener" target="_blank">arXiv:2510.03215<span class="sr-only"> (opens in a new tab)</span></a>
+          · ICLR 2026 · code <a href="https://github.com/thu-nics/C2C" rel="noopener" target="_blank">thu-nics/C2C<span class="sr-only"> (opens in a new tab)</span></a>, Apache-2.0</p>
+
+          <p class="rsr__attr">C2C is their result. Sections 01 and 02 of this page are my reading of
+          their paper; the cross-modal question in 03 is mine, and it is a question, not a result.
+          Every diagram here is drawn from scratch — none of the paper's figures are reproduced.</p>
+        </section>
+
+      </div>
+    </section>

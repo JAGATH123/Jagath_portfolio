@@ -1,12 +1,12 @@
-/* 16-print.css
+/* 18-print.css
    Print. Browsers drop background graphics, so colours are re-pointed. */
 
 /* ═══════════════════ 12. PRINT ═══════════════════
    On screen this is a fixed single-viewport HUD: body{overflow:hidden},
-   #root{position:fixed}, and three of the four screens parked at
+   #root{position:fixed}, and four of the five screens parked at
    visibility:hidden. Sent to a printer as-is, that is one clipped page
    carrying a quarter of the content. This unwinds the shell into a
-   plain light document, top to bottom, all four sections.
+   plain light document, top to bottom, all five sections.
    The <noscript> block in index.html solves the same problem for the
    same reason and these are largely the same declarations; the colour
    work is the part a printer additionally needs, since browsers drop
@@ -21,7 +21,7 @@
 
   /* decoration, or wholly dependent on the fixed shell */
   #bg,.wordmark-wrap,.fx,.rail,.tel,.glitch,.glitch.on,.skip,
-  .nav,.nav__cap,.hire,.ftr__act,.feed__rec,.cue,.proj__caret,
+  .nav,.nav__cap,.hire,.ftr__act,.lat,.cue,.proj__caret,
   .brand__hex,.btn__hazard,.techhex,.dot{display:none;}
 
   .main,.hdr,.ftr{position:static;}
@@ -36,7 +36,6 @@
   .screen > *,.screen[data-active] > *{max-width:none;margin:0;animation:none;}
   .home{display:block;}
   .hook{min-height:0;}
-  .feed{width:46mm;float:right;margin:0 0 12px 14px;}
 
   /* Ink. Every one of these is white or translucent white on screen. */
   .display,.slab,.lede,.role__sub,.status,.proj__name,.proj__line,
@@ -51,7 +50,7 @@
      #0b4da2 is 8.1:1 on white. */
   .eyebrow,.jp,.brand__word,.role,.contact__k,.statline dt,.ftr__k,
   .proj__num,.proj__meta,.case h4,.metric,.ident__next span,
-  .feed__cap,.feed__meta,a,.btn,.contact__v--link{color:#0b4da2;text-shadow:none;}
+  a,.btn,.contact__v--link{color:#0b4da2;text-shadow:none;}
 
   /* anything whose legibility came from a filled background */
   .slab,.role,.chip,.btn,.proj__btn,.case{background:none;clip-path:none;}

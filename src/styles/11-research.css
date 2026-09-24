@@ -1,0 +1,211 @@
+/* 11-research.css
+   The \lab screen: long-form prose and three hand-drawn figures.
+
+   Everything in the figures resolves to a grade custom property, so they
+   recolour with the screen like the rest of the page. The one exception is
+   --fig-warn: it means "this is the expensive path", which is true in every
+   grade, and a cost that changed colour per screen would read as decoration.
+
+   Figure animation is CSS keyframes and not SMIL, deliberately.
+   17-reduced-motion.css disables animation with a `*` rule, which reaches
+   inside inline SVG; SMIL ignores it entirely. Every animated element
+   therefore rests in its FINISHED state, so switching motion off leaves the
+   figure complete rather than blank. */
+
+/* ─────────── RESEARCH ─────────── */
+.rsr{max-width:1080px;--fig-warn:#ff8a73;}
+.screen--research{padding-block:var(--hdr-h) var(--ftr-h);}
+.rsr__lede{
+  max-width:68ch;margin:18px 0 0;
+  font-family:var(--mono);font-size:15px;line-height:1.75;
+  color:#fff;text-shadow:var(--sh-copy);
+}
+.rsr__lede em{color:var(--accent2);font-style:normal;}
+
+/* topic chips — texture, and a reader's fastest read of what this is about */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0 0;padding:0;list-style:none;}
+.chips li{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);
+  padding:4px 9px 5px;
+}
+/* the one term that is his rather than the paper's, so it does not sit in
+   the same row pretending to be standard vocabulary */
+.chips--mine{margin:18px 0 26px;}
+.chips--mine li{background:var(--accent);color:var(--ink);border-color:var(--accent);}
+
+.rsr__block{margin-top:64px;padding-top:30px;border-top:1px solid color-mix(in srgb,var(--accent) 34%,transparent);}
+.rsr__h{
+  display:flex;align-items:baseline;gap:14px;margin:0 0 18px;
+  font-family:var(--disp);font-weight:700;font-size:clamp(20px,2.6vw,30px);
+  line-height:1.2;color:#fff;text-shadow:var(--sh-copy);
+}
+.rsr__h--sm{font-size:clamp(15px,1.6vw,18px);}
+.rsr__n{flex:none;font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.2em;color:var(--accent);}
+.rsr__sub{
+  margin:34px 0 12px;font-family:var(--mono);font-weight:400;
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);text-shadow:var(--sh-cap);
+}
+.rsr p{
+  max-width:74ch;margin:0 0 15px;
+  font-family:var(--mono);font-size:13.5px;line-height:1.8;
+  color:rgba(255,255,255,.86);text-shadow:var(--sh-copy);
+}
+.rsr em{color:var(--accent2);font-style:normal;}
+.rsr b{color:#fff;font-weight:700;}
+.rsr__kick{padding-left:15px;border-left:3px solid var(--accent);color:#fff!important;}
+/* the hypothesis, set as the one thing on the page a reader could disagree with */
+.rsr__hyp{
+  max-width:none!important;margin:24px 0!important;padding:18px 20px 20px;
+  background:rgba(4,6,12,.66);border-left:3px solid var(--accent);
+  font-family:var(--disp)!important;font-weight:600;
+  font-size:clamp(16px,1.9vw,21px)!important;line-height:1.5!important;color:#fff!important;
+}
+.rsr__note{display:block;margin-top:9px;font-size:11.5px;color:rgba(255,255,255,.6);}
+
+.rsr__nums{display:flex;flex-wrap:wrap;gap:18px 46px;margin:20px 0 22px;}
+.rsr__nums dt{font-family:var(--disp);font-weight:700;font-size:clamp(22px,3vw,34px);color:var(--accent);line-height:1;}
+.rsr__nums dd{margin:6px 0 0;max-width:24ch;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:rgba(255,255,255,.72);}
+
+.rsr__steps,.rsr__blockers{max-width:74ch;margin:16px 0 20px;padding-left:22px;}
+.rsr__steps li,.rsr__blockers li{
+  margin-bottom:13px;font-family:var(--mono);font-size:13px;line-height:1.75;
+  color:rgba(255,255,255,.86);text-shadow:var(--sh-copy);
+}
+.rsr__steps li::marker,.rsr__blockers li::marker{color:var(--accent);font-size:11px;}
+
+.rsr__cite{margin-top:58px;padding-top:26px;border-top:1px solid color-mix(in srgb,var(--accent) 34%,transparent);}
+.rsr__paper{font-size:12.5px!important;color:rgba(255,255,255,.8)!important;}
+.rsr__paper cite{font-style:normal;color:#fff;font-weight:700;}
+/* Not smaller than body text, and not italicised: this is a statement about
+   where the line is, and setting it as fine print would read as an apology. */
+.rsr__attr{margin-top:14px!important;color:rgba(255,255,255,.86)!important;}
+
+/* ─────────── FIGURES ─────────── */
+.fig{margin:30px 0 34px;}
+.fig__frame{
+  position:relative;overflow:hidden;padding:20px 22px;
+  border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);
+  background:rgba(4,6,12,.5);
+  clip-path:polygon(0 0,100% 0,100% 94%,98.6% 100%,0 100%);
+}
+.fig__svg{display:block;width:100%;height:auto;overflow:visible;}
+.fig__cap{
+  max-width:78ch;margin-top:13px;
+  font-family:var(--mono);font-size:12px;line-height:1.7;
+  color:rgba(255,255,255,.72);text-shadow:var(--sh-copy);
+}
+.fig__cap b{color:var(--accent);font-weight:400;}
+.fig__cap em{color:rgba(255,255,255,.92);font-style:italic;}
+/* the clause that keeps Fig 1 honest about which number is the headline */
+.fig__hedge{display:block;margin-top:6px;font-style:italic;color:rgba(255,255,255,.55);}
+
+/* ── figure primitives, shared by all three ── */
+.fig__box{fill:rgba(255,255,255,.035);stroke:color-mix(in srgb,var(--accent) 62%,transparent);stroke-width:1;}
+.fig__box--key{fill:color-mix(in srgb,var(--accent) 16%,transparent);stroke:var(--accent);stroke-width:1.6;}
+.fig__box--out{fill:color-mix(in srgb,var(--accent2) 12%,transparent);stroke:var(--accent2);}
+.fig__box--pinch{fill:rgba(255,255,255,.02);stroke-dasharray:3 2;}
+.fig__box--inset{fill:rgba(0,0,0,.28);stroke:color-mix(in srgb,var(--accent) 34%,transparent);}
+.fig__box--ghost{fill:none;stroke:rgba(255,255,255,.26);stroke-dasharray:2 3;}
+/* one convention for "unsolved", used everywhere and nowhere else */
+.fig__box--open{fill:rgba(255,255,255,.02);stroke:var(--accent);stroke-width:1.4;stroke-dasharray:6 4;}
+.fig__box--subj{fill:color-mix(in srgb,var(--accent) 9%,transparent);}
+
+.fig__t{fill:#fff;font-family:var(--disp);font-weight:700;font-size:13px;text-anchor:middle;letter-spacing:.04em;}
+.fig__t--sm{font-size:11px;}
+.fig__t--v{font-size:10px;}
+.fig__t--warn{fill:var(--fig-warn);}
+.fig__t--struck{fill:rgba(255,255,255,.5);text-decoration:line-through;}
+.fig__s{fill:rgba(255,255,255,.58);font-family:var(--mono);font-size:9.5px;text-anchor:middle;letter-spacing:.08em;}
+.fig__s--tiny{font-size:8.5px;}
+.fig__s--edge{fill:var(--accent);}
+.fig__s--warn{fill:var(--fig-warn);}
+.fig__s--call{fill:rgba(255,255,255,.66);font-size:9px;}
+.fig__s--q{fill:var(--accent2);font-size:10.5px;letter-spacing:.04em;}
+.fig__s--legend{fill:rgba(255,255,255,.45);}
+.fig__lane{fill:var(--accent);font-family:var(--mono);font-size:10px;letter-spacing:.24em;}
+.fig__big{fill:var(--accent);font-family:var(--disp);font-weight:700;font-size:26px;text-anchor:middle;}
+.fig__big--warn{fill:var(--fig-warn);}
+.fig__formula{fill:rgba(255,255,255,.7);font-family:var(--mono);font-size:11px;letter-spacing:.04em;}
+.fig__lock{fill:var(--accent);font-size:9px;}
+
+.fig__edge{fill:none;stroke:color-mix(in srgb,var(--accent) 58%,transparent);stroke-width:1.2;}
+.fig__edge--arrow{marker-end:url(#fig-arrow);}
+.fig__edge--thin{stroke-width:.8;stroke-dasharray:3 3;}
+.fig__rule{stroke:color-mix(in srgb,var(--accent) 22%,transparent);stroke-width:1;}
+.fig__plus{stroke:var(--accent);stroke-width:1.8;fill:none;}
+.fig__cells rect{fill:color-mix(in srgb,var(--accent) 34%,transparent);}
+.fig__cells--alt rect{fill:color-mix(in srgb,var(--accent2) 30%,transparent);}
+.fig__cells--grid rect{fill:color-mix(in srgb,var(--accent2) 26%,transparent);}
+.fig__badge{fill:rgba(4,6,12,.9);stroke:var(--accent);stroke-width:1.2;}
+.fig__badge-t{fill:var(--accent);font-family:var(--disp);font-weight:700;font-size:11px;text-anchor:middle;}
+.fig__badge-t--lg{font-size:14px;}
+
+/* ── figure motion ─────────────────────────────────────────────────────
+   Every rule below keys off .is-seen, which assets/js/figures.js adds on
+   scroll. The UNANIMATED state is the finished one, so no script, no
+   IntersectionObserver or reduced motion all leave a complete diagram.
+   `backwards` is what holds the start state through the delay. */
+.fig__arrowhead{fill:color-mix(in srgb,var(--accent) 58%,transparent);}
+
+/* Fig 1 — lane A counts, lane B is already done */
+.f1__tok{fill:color-mix(in srgb,var(--fig-warn) 46%,transparent);}
+.f1__idle{stroke:color-mix(in srgb,var(--accent) 30%,transparent);stroke-width:1;stroke-dasharray:2 6;}
+@keyframes f1tok{from{fill:color-mix(in srgb,var(--fig-warn) 4%,transparent);}}
+@keyframes f1wake{from{opacity:.22;}}
+.fig.is-seen .f1__tok{animation:f1tok .01s steps(1) backwards;}
+.fig.is-seen .f1__tok:nth-child(1){animation-delay:.20s;}
+.fig.is-seen .f1__tok:nth-child(2){animation-delay:.42s;}
+.fig.is-seen .f1__tok:nth-child(3){animation-delay:.64s;}
+.fig.is-seen .f1__tok:nth-child(4){animation-delay:.86s;}
+.fig.is-seen .f1__tok:nth-child(5){animation-delay:1.08s;}
+.fig.is-seen .f1__tok:nth-child(6){animation-delay:1.30s;}
+.fig.is-seen .f1__tok:nth-child(7){animation-delay:1.52s;}
+.fig.is-seen .f1__tok:nth-child(8){animation-delay:1.74s;}
+.fig.is-seen .f1__tok:nth-child(9){animation-delay:1.96s;}
+.fig.is-seen .f1__tok:nth-child(10){animation-delay:2.18s;}
+.fig.is-seen .f1__tok:nth-child(11){animation-delay:2.40s;}
+.fig.is-seen .f1__tok:nth-child(12){animation-delay:2.62s;}
+/* the Receiver does not wake until the last token has landed */
+.fig.is-seen .f1__rcv{animation:f1wake .01s steps(1) 2.84s backwards;}
+/* both of lane B's prefills on the same frame — that simultaneity is the
+   entire argument, so they must not be staggered by even one step */
+.fig.is-seen .f1__par,.fig.is-seen .f1__fuse{animation:f1wake .01s steps(1) .20s backwards;}
+
+/* Fig 2 — the gate hardening is the one idea worth animating */
+.f2__temp{fill:none;stroke:var(--accent);stroke-width:1.4;}
+@keyframes f2draw{from{stroke-dashoffset:126;}}
+@keyframes f2gate{0%{opacity:.3;letter-spacing:.34em;}70%{opacity:.65;}100%{opacity:1;letter-spacing:0;}}
+.fig.is-seen .f2__temp{stroke-dasharray:126;animation:f2draw 1.5s ease-out .25s backwards;}
+.fig.is-seen .f2__g{animation:f2gate 1.7s ease-out .25s backwards;}
+.f2__hit{fill:transparent;}
+.f2__tip{opacity:0;}
+/* A closed gate is the identity — the most useful thing on the page to be
+   able to try, so it is worth the one interaction. Pointer only: there is no
+   hover to leave on a touchscreen, and the figure reads without it. */
+@media (hover:hover){
+  .f2__hit{cursor:help;}
+  .f2__tip{opacity:.45;transition:opacity .2s ease;}
+  .fig__frame:has(.f2__hit:hover) .f2__chain,
+  .fig__frame:has(.f2__hit:hover) .f2__anneal{opacity:.14;transition:opacity .2s ease;}
+  .fig__frame:has(.f2__hit:hover) .f2__res{stroke:var(--accent2);stroke-width:2.2;}
+  .fig__frame:has(.f2__hit:hover) .f2__tip{opacity:0;}
+}
+
+/* Fig 3 — almost nothing moves, on purpose. The parts carried over from
+   Fig 2 hold perfectly still; only the unsolved ones draw themselves in.
+   A question that animates smoothly looks like a result. */
+@keyframes f3in{from{opacity:0;}}
+.fig.is-seen .f3__open,.fig.is-seen .f3__clash{animation:f3in .55s ease-out .25s backwards;}
+.f3__dim{opacity:.55;}
+.f3__brace{fill:none;stroke:var(--fig-warn);stroke-width:1.2;}
+.f3__dot{fill:none;stroke:color-mix(in srgb,var(--accent) 48%,transparent);stroke-width:1;stroke-dasharray:2 4;}
+.f3__cut{stroke:rgba(255,255,255,.28);stroke-width:1;}
+.f3__x{stroke:var(--fig-warn);stroke-width:1.6;fill:none;}
+
+/* A presentation attribute loses to any CSS declaration, so text-anchor has
+   to be set here or .fig__s's `middle` silently wins and the left-edge
+   labels get centred over the frame edge and clipped. */
+.fig__a--l{text-anchor:start;}
+.fig__a--r{text-anchor:end;}

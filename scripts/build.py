@@ -27,6 +27,9 @@ TEMPLATE SYNTAX — four constructs, no engine, no dependencies:
     {{> partials/head.html }}          include a file (recursive, indent-aware)
     {{ site.email }}                   dotted lookup into src/content/*.json
     {{ count.projects }}               how many entries projects.json has
+
+The Google Fonts &text= subset is filled in from the rendered page rather
+than typed by hand — see font_subset().
     {{# projects }} … {{/ projects }}  repeat per entry, {{ . field }} inside
 
 Anything else inside {{ }} raises a build error naming the file and the
@@ -38,6 +41,7 @@ import re
 import shutil
 import sys
 import tempfile
+import urllib.parse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -52,6 +56,10 @@ VAR = re.compile(r"\{\{\s*([^#/>!][^}]*?)\s*\}\}")
 # {{! ... }} documents a template for whoever edits it and never reaches the
 # output. Use it instead of an HTML comment, which a loop would emit N times.
 NOTE = re.compile(r"^[ \t]*\{\{!.*?\}\}[ \t]*\n?", re.M | re.S)
+
+# Kana and CJK, for the Google Fonts &text= subset. See font_subset().
+CJK = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]")
+SUBSET_SENTINEL = "SUBSET_AT_BUILD"
 
 
 class BuildError(Exception):
@@ -127,6 +135,28 @@ def render(text, data, origin):
     return text
 
 
+def font_subset(html, origin):
+    """Fill in the Google Fonts &text= parameter from the page itself.
+
+    &text= is request-global in the CSS2 API and the list used to be typed by
+    hand, which fails silently in both directions: a character missing from
+    the list renders in a system font mid-word, and characters left in it
+    after the copy changes are paid for on every load. Two had already gone
+    missing. Deriving it from the rendered page makes both impossible.
+
+    Runs after includes and loops, so it sees every character that ships.
+    """
+    if SUBSET_SENTINEL not in html:
+        return html
+    chars = "".join(sorted(set(CJK.findall(html))))
+    if not chars:
+        raise BuildError(
+            f"{origin}: requests a subsetted font but contains no CJK. "
+            "Drop the Noto Sans JP <link> instead of shipping an empty subset."
+        )
+    return html.replace(SUBSET_SENTINEL, urllib.parse.quote(chars))
+
+
 def build_styles(dist):
     """Concatenate src/styles in the order main.css.order gives.
 
@@ -162,7 +192,8 @@ def build(dist):
     written = []
 
     for page in sorted((SRC / "pages").glob("*.html")):
-        html = render(page.read_text(encoding="utf-8"), data, f"pages/{page.name}")
+        origin = f"pages/{page.name}"
+        html = font_subset(render(page.read_text(encoding="utf-8"), data, origin), origin)
         (dist / page.name).write_text(html, encoding="utf-8")
         written.append((page.name, len(html)))
 

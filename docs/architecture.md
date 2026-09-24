@@ -61,7 +61,7 @@ was added.
 
 ## Styles
 
-Eighteen partials in `src/styles/`, concatenated in the order given by
+Nineteen partials in `src/styles/`, concatenated in the order given by
 `main.css.order`.
 
 **That order is the cascade.** Reordering the manifest changes which rules
@@ -69,8 +69,12 @@ win. Treat it as code.
 
 The split follows the stylesheet's own structure: header (the map and
 legends) → reset → tokens → base → shell → shared → header/rails → screens →
-one file per screen → footer → animation → **one file per device tier** →
-reduced-motion → print.
+one file per screen, in DOM order (home, about, work, research, contact) →
+footer → animation → **one file per device tier** → reduced-motion → print.
+
+Order lives in `main.css.order` and nowhere else; the numeric prefixes only
+mirror it. Each partial names itself on its first line, and `make verify`
+fails if a renumbering leaves one calling itself by its old name.
 
 ### Device tiers
 
@@ -105,16 +109,16 @@ Two of those rows are the reason the map is not a simple ladder:
 The phone tier re-composes the HUD rather than deleting it: the two side
 rails become a drawn instrument frame (`#root::after`, four gradient layers on
 one pseudo-element), the nav leaves the top of the screen for the thumb zone,
-and the portrait stops being a card beside the copy and becomes the one
+and the home field stops being a panel beside the copy and becomes the one
 full-bleed moment. Reserved chrome goes from 296px of an 852px screen to
 150px.
 
 ## Scripts
 
-Ten ES modules. `main.js` wires them together and holds no logic of its own.
+Twelve ES modules. `main.js` wires them together and holds no logic of its own.
 
 ```
-main.js       constructs and connects. 58 lines.
+main.js       constructs and connects. 63 lines.
 loop.js       the single rAF ticker — running flag, visibility pause, recovery
 media.js      watchMedia(); reduced-motion as a live signal. scene/index.js
               uses the same helper for its own 760px breakpoint.
@@ -123,6 +127,9 @@ scene/        canvas field, colour grades, the six CSS custom properties
 telemetry.js  clock, uptime, FPS, grade readout
 sound.js      WebAudio blip and its persisted toggle
 glitch.js     the transition sweep
+lattice.js    the home field: sets geometry and opacity on an SVG whose
+              colours all come from CSS, so it recolours for free
+figures.js    adds .is-seen to a research figure on first scroll-in
 ```
 
 `loop.js` exists so the renderer and telemetry share one rAF tick. Two loops
@@ -157,12 +164,36 @@ checks all six defaults and fails if any drifts.
 
 **A project** — one object in `src/content/projects.json`. Fields: `num`,
 `name`, `line`, `tech`, `year`, `problem`, `approach`, `outcomeLabel`,
-`metricClass`, `metric`, `metricLabel`.
+`metricClass`, `metric`, `metricLabel`, `outcomeKind` (`status`, `figure` or
+`live` — how the outcome chip renders on the closed card on a phone).
 
 **A screen** — a file in `src/sections/`, an include in `src/pages/index.html`,
-a tab in `src/partials/header.html`, and a grade in
-`src/scripts/scene/grades.js`. Four edits; the router reads the rest from the
-DOM.
+a tab in `src/partials/header.html`, a grade in `src/scripts/scene/grades.js`,
+and a stylesheet (see below). The router, the digit shortcuts and the nav's
+plate count all read the rest from the DOM.
+
+Three things that used to go wrong silently here now fail `make verify`: a
+screen with no tab (or a tab with no screen), a `data-grade` that is not in
+`GRADES` — `scene/index.js` returns quietly on an unknown key, so the new
+screen would wear the previous one's colours — and a CJK character missing
+from the font subset.
+
+The phone nav fits five plates at 360px with labels up to about six
+characters. The fifth plate is `\lab` rather than `\research` for exactly
+that reason; the section id, the URL and the heading all say research.
 
 **A stylesheet** — a file in `src/styles/` and a line in `main.css.order`, in
-the position the cascade needs.
+the position the cascade needs. Its first line names the file.
+
+**A figure** — a partial in `src/partials/figures/`, included from the section
+that uses it. Inline SVG, not a separate `.svg` file: the grade colours are
+custom properties written onto `#root` as an inline style, and an `<img>` SVG is
+a separate document that cannot see them. Animate it with CSS, not SMIL —
+`17-reduced-motion.css` switches animation off with a `*` rule that reaches
+inside inline SVG and that SMIL ignores — and let every animated element *rest*
+in its finished state, so a figure with no script is complete, not blank. Give
+it an `id` (`fig-4`) and cross-reference it as `<a href="#fig-4">`, which
+`make verify` then checks for free.
+
+**Kana** — just write them. The Google Fonts `&text=` subset is derived from
+the rendered page by `font_subset()` in `build.py`; nothing to keep in sync.

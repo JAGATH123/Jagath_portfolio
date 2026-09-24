@@ -1,0 +1,12 @@
+{{! defs.html — shared marker for all three figures. Defined once, in its own
+    zero-size <svg>, rather than inside Fig 1: url(#fig-arrow) resolves
+    document-wide, so hanging it off one figure would silently strip the
+    arrowheads from the other two the day that figure moved. }}
+        <svg class="fig__defs" width="0" height="0" aria-hidden="true" focusable="false">
+          <defs>
+            <marker id="fig-arrow" viewBox="0 0 8 8" refX="7" refY="4"
+                    markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path class="fig__arrowhead" d="M0 1 L7 4 L0 7 z"></path>
+            </marker>
+          </defs>
+        </svg>

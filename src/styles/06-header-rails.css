@@ -44,21 +44,28 @@
 /* CURRENT PAGE. The old cue was a single accent wash at .30 opacity,
    which measured 1.67–2.07:1 against a resting tab depending on the
    grade, and was carried entirely by hue — it failed 1.4.11 for the
-   indicator and 1.4.1 for being colour-only. Now:
-     · the wash goes to .55        → 3.1–4.4:1 across all four grades
-     · the label inverts to #fff   → 4.4–6.2:1 ON that wash, which is
-                                      the reason the wash could not
-                                      simply be turned up on its own:
-                                      accent-on-accent falls apart
-     · a solid 4px bar underneath  → a SHAPE, present or absent, which
-                                      is what 1.4.1 actually asks for,
-                                      and 8.5:1 on its own
+   indicator and 1.4.1 for being colour-only. Now, measured in all five
+   grades, three renders each:
+     · #fff label on the wash  4.7–6.7:1 (1.4.3). The wash sits on an
+                               OPAQUE base. Over the bare canvas the same
+                               colour measured 3.9:1 in one frame and 4.5:1
+                               in the next, and EMBER dipped to 4.3 — the
+                               label's contrast depended on which blob had
+                               drifted behind it. The base makes it a fixed
+                               property of the grade instead of a draw.
+     · the solid 4px bar       5.1–10.7:1 against the header (1.4.11), and
+                               a SHAPE, present or absent, which is what
+                               1.4.1 asks for. This is the state indicator.
+     · the .55 wash itself     2.5–3.5:1 against a resting tab: a secondary
+                               cue, deliberately not the one carrying 1.4.11.
+   The label inverts to #fff because the wash could not simply be turned
+   up on its own: accent-on-accent falls apart.
    font-weight was considered as a second non-chromatic cue and rejected:
    it changes the advance width, and at the 460px breakpoint .tab__box is
    down to 1px of horizontal padding with nothing to give. */
 .tab[aria-current="page"] .tab__box::before{opacity:.55;}
 .tab[aria-current="page"] .tab__box{
-  color:#fff;
+  color:#fff;background:#05060a; /* #root's own base — the wash sits on this */
   box-shadow:0 0 0 1px var(--accent),0 0 22px -6px var(--accent);
 }
 .tab[aria-current="page"] .tab__box::after{

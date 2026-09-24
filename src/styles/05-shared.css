@@ -40,7 +40,7 @@
    minus the step DOWN in size that used to happen as the viewport
    crossed 821px and the mobile plateau was replaced by a lower point on
    the desktop curve. */
-.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.24em;color:var(--accent);text-shadow:var(--sh-cap);}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.24em;color:var(--accent);text-shadow:var(--sh-cap);text-wrap:balance;}
 .display{font-family:var(--disp);font-weight:700;color:#fff;letter-spacing:-.01em;line-height:.94;}
 .display--xl{font-size:clamp(34px,min(10vw,max(64px,7.4vw)),104px);}
 .display--lg{font-size:clamp(30px,min(9vw,max(56px,5.6vw)),74px);letter-spacing:.02em;margin:4px 0 18px;}
@@ -89,5 +89,6 @@
   /* --slab-fg is declared in :root, so the old var() fallback to
      --accent was unreachable. */
   background:var(--accent2);color:var(--slab-fg);padding:3px 14px 8px;
+  text-wrap:balance;
 }
 .slab-lines--c .slab{font-size:clamp(18px,min(5.2vw,max(30px,3.4vw)),50px);}

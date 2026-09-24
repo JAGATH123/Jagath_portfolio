@@ -1,0 +1,39 @@
+{{! lattice.html — the home screen's field, where the portrait used to be.
+
+    The base grid is a <pattern> rather than 308 <rect> elements: it is five
+    lines of markup instead of ten kilobytes, and it means the field is
+    already complete before assets/js/lattice.js runs. With scripting off the
+    visitor gets a still lattice instead of an empty box.
+
+    Every colour here comes from the stylesheet, so the field cross-fades
+    with the rest of the page when the grade changes. Nothing is painted
+    from JavaScript.
+
+    The 16px pitch and the 22x24 extent are duplicated in lattice.js. They
+    have to agree or the lit cells stop landing on the grid. }}
+        <div class="lat">
+          <div class="lat__cap" aria-hidden="true"><span>▪ KV_FIELD</span><span class="jp">キャッシュ</span></div>
+          <div class="lat__frame">
+            <svg class="lattice" viewBox="0 0 352 384" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lat-cell" width="16" height="16" patternUnits="userSpaceOnUse">
+                  <rect class="lat__unit" x="0" y="4" width="11" height="7"></rect>
+                </pattern>
+                <linearGradient id="lat-sweep" x1="0" y1="0" x2="1" y2="0">
+                  <stop class="lat__s0" offset="0"></stop>
+                  <stop class="lat__s1" offset="1"></stop>
+                </linearGradient>
+              </defs>
+              <rect class="lattice__field" width="352" height="384" fill="url(#lat-cell)"></rect>
+              <g class="lattice__live"></g>
+              <g class="lattice__head">
+                <rect class="lattice__wake" x="-46" y="0" width="46" height="384" fill="url(#lat-sweep)"></rect>
+                <rect class="lattice__edge" x="0" y="0" width="1.5" height="384"></rect>
+              </g>
+            </svg>
+            <span class="crn crn--tl" aria-hidden="true"></span>
+            <span class="crn crn--tr" aria-hidden="true"></span>
+            <span class="crn crn--bl" aria-hidden="true"></span>
+          </div>
+          <div class="lat__meta" aria-hidden="true"><span>RESIDENT // 22×24</span><span>DATUM LINE</span></div>
+        </div>

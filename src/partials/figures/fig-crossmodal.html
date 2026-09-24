@@ -1,0 +1,120 @@
+{{! fig-crossmodal.html — Fig 3. Same geometry as Fig 2 on purpose: whatever
+    survives sits in the identical place, so the eye reads a diff rather than a
+    new architecture. One convention for unknown — dashed stroke plus a ?
+    badge — and no second marker. }}
+          <figure class="fig" id="fig-3">
+            <div class="fig__frame">
+              <svg class="fig__svg f3" viewBox="0 0 1000 470" role="img" aria-labelledby="fig3-t fig3-d">
+                <title id="fig3-t">The same Fuser with a vision tower, and what stops working</title>
+                <desc id="fig3-d">The Receiver, the gate, the residual add and the output keep their
+                exact positions from figure two. The Sharer is replaced by a frozen vision encoder
+                producing a two-dimensional patch grid. Layer selection and the projector are drawn
+                dashed because they are unsolved, and a length-mismatch annotation marks the
+                structural blocker: 576 patches cannot be padded to meet roughly 20 cache cells.</desc>
+
+                <g class="f3__keep">
+                  <rect class="fig__box" x="0" y="30" width="104" height="46"></rect>
+                  <g class="fig__cells">
+                    <rect x="8" y="38" width="12" height="30"></rect><rect x="24" y="38" width="12" height="30"></rect>
+                    <rect x="40" y="38" width="12" height="30"></rect><rect x="56" y="38" width="12" height="30"></rect>
+                    <rect x="72" y="38" width="12" height="30"></rect><rect x="88" y="38" width="12" height="30"></rect>
+                  </g>
+                  <text class="fig__t fig__t--sm fig__a--l" x="0" y="22">RECEIVER KV <tspan class="fig__lock">▪</tspan></text>
+                  <text class="fig__s fig__a--l" x="0" y="90">layer n · ~20 cells</text>
+                </g>
+
+                {{! the encoder itself is not in question — only what comes after it }}
+                <rect class="fig__box" x="0" y="124" width="104" height="68"></rect>
+                <g class="fig__cells fig__cells--grid">
+                  <rect x="8" y="132" width="11" height="11"></rect><rect x="23" y="132" width="11" height="11"></rect><rect x="38" y="132" width="11" height="11"></rect><rect x="53" y="132" width="11" height="11"></rect><rect x="68" y="132" width="11" height="11"></rect><rect x="83" y="132" width="11" height="11"></rect>
+                  <rect x="8" y="147" width="11" height="11"></rect><rect x="23" y="147" width="11" height="11"></rect><rect x="38" y="147" width="11" height="11"></rect><rect x="53" y="147" width="11" height="11"></rect><rect x="68" y="147" width="11" height="11"></rect><rect x="83" y="147" width="11" height="11"></rect>
+                  <rect x="8" y="162" width="11" height="11"></rect><rect x="23" y="162" width="11" height="11"></rect><rect x="38" y="162" width="11" height="11"></rect><rect x="53" y="162" width="11" height="11"></rect><rect x="68" y="162" width="11" height="11"></rect><rect x="83" y="162" width="11" height="11"></rect>
+                  <rect x="8" y="177" width="11" height="11"></rect><rect x="23" y="177" width="11" height="11"></rect><rect x="38" y="177" width="11" height="11"></rect><rect x="53" y="177" width="11" height="11"></rect><rect x="68" y="177" width="11" height="11"></rect><rect x="83" y="177" width="11" height="11"></rect>
+                </g>
+                <text class="fig__t fig__t--sm fig__a--l" x="0" y="116">VISION ENCODER <tspan class="fig__lock">▪</tspan></text>
+                <text class="fig__s fig__a--l" x="0" y="206">2D patch grid</text>
+                <text class="fig__s fig__a--l" x="0" y="219">256–576 patches</text>
+
+                <path class="fig__edge fig__edge--arrow" d="M104 158 H 130"></path>
+                <g class="f3__open">
+                  <rect class="fig__box fig__box--open" x="130" y="134" width="88" height="48"></rect>
+                  <text class="fig__t fig__t--sm" x="174" y="155">LAYER</text>
+                  <text class="fig__t fig__t--sm" x="174" y="170">SELECT</text>
+                  <circle class="fig__badge" cx="212" cy="140" r="9"></circle>
+                  <text class="fig__badge-t" x="212" y="144">?</text>
+                </g>
+
+                <path class="fig__edge fig__edge--arrow" d="M218 158 H 240"></path>
+                <path class="fig__edge fig__edge--arrow" d="M104 53 H 122 V 96 H 240"></path>
+
+                {{! the subject of the figure, and the only node drawn oversized }}
+                <g class="f3__open">
+                  <rect class="fig__box fig__box--open fig__box--subj" x="240" y="50" width="196" height="122"></rect>
+                  <text class="fig__t" x="338" y="80">PROJECTOR</text>
+                  <circle class="fig__badge fig__badge--lg" cx="424" cy="62" r="11"></circle>
+                  <text class="fig__badge-t fig__badge-t--lg" x="424" y="67">?</text>
+                  <text class="fig__s fig__s--q" x="338" y="106">resample the grid?</text>
+                  <text class="fig__s fig__s--q" x="338" y="128">cross-attend instead?</text>
+                  <text class="fig__s fig__s--q" x="338" y="150">re-impose position?</text>
+                </g>
+
+                {{! the structural blocker — the most legible thing after the projector }}
+                <g class="f3__clash">
+                  <path class="f3__brace" d="M242 262 q0 -11 11 -11 h74 q11 0 11 -11 q0 11 11 11 h74 q11 0 11 11"></path>
+                  <text class="fig__t fig__t--sm fig__t--warn" x="338" y="286">LENGTH MISMATCH</text>
+                  <text class="fig__s fig__s--warn" x="338" y="304">576 patches against ~20 cache cells</text>
+                  <text class="fig__s fig__s--warn" x="338" y="318">a one-to-one residual add requires equal length</text>
+                </g>
+
+                <path class="fig__edge fig__edge--arrow" d="M436 96 H 444"></path>
+                <g class="f3__dim">
+                  <rect class="fig__box" x="444" y="50" width="124" height="76"></rect>
+                  <g class="f2__heads">
+                    <rect x="452" y="96" width="9" height="22"></rect><rect x="466" y="70" width="9" height="48"></rect>
+                    <rect x="480" y="86" width="9" height="32"></rect><rect x="494" y="60" width="9" height="58"></rect>
+                    <rect x="508" y="102" width="9" height="16"></rect><rect x="522" y="78" width="9" height="40"></rect>
+                    <rect x="536" y="92" width="9" height="26"></rect><rect x="550" y="66" width="9" height="52"></rect>
+                  </g>
+                  <text class="fig__t fig__t--sm" x="506" y="42">HEAD MODULATION</text>
+                  <circle class="fig__badge" cx="562" cy="56" r="8"></circle>
+                  <text class="fig__badge-t" x="562" y="60">?</text>
+                </g>
+
+                {{! unchanged from Fig 2, in the identical place, at full weight }}
+                <g class="f3__keep">
+                  <path class="fig__edge fig__edge--arrow" d="M568 88 H 598"></path>
+                  <rect class="fig__box fig__box--key" x="598" y="62" width="72" height="52"></rect>
+                  <text class="fig__t fig__t--sm" x="634" y="86">GATE</text>
+                  <text class="fig__t fig__t--sm" x="634" y="106">gₙ</text>
+                  <text class="fig__s" x="634" y="130">transfers unchanged</text>
+                  <path class="fig__edge fig__edge--arrow" d="M670 88 H 742"></path>
+                  <circle class="fig__box fig__box--key" cx="760" cy="88" r="18"></circle>
+                  <path class="fig__plus" d="M750 88 H 770 M760 78 V 98"></path>
+                  <path class="fig__edge fig__edge--arrow" d="M778 88 H 808"></path>
+                  <rect class="fig__box fig__box--out" x="808" y="62" width="152" height="52"></rect>
+                  <text class="fig__t fig__t--sm" x="884" y="86">FUSED CACHE</text>
+                  <text class="fig__s" x="884" y="104">→ layer n+1</text>
+                  <path class="fig__edge fig__edge--arrow f2__res" d="M52 76 V 356 H 760 V 110"></path>
+                </g>
+
+                {{! both lines are needed: the caption trains the projector and is
+                    absent at inference. Either one alone misrepresents the claim. }}
+                <g class="f3__cap">
+                  <rect class="fig__box fig__box--ghost" x="0" y="392" width="96" height="36"></rect>
+                  <text class="fig__t fig__t--sm fig__t--struck" x="48" y="415">CAPTION</text>
+                  <path class="f3__dot" d="M48 392 V 376 H 214 V 172"></path>
+                  <text class="fig__s fig__s--tiny fig__a--l" x="150" y="294">training target only</text>
+                  <path class="f3__cut" d="M96 410 H 196"></path>
+                  <path class="f3__x" d="M139 402 L 153 418 M153 402 L 139 418"></path>
+                  <text class="fig__s fig__s--tiny fig__a--l" x="210" y="374">removed from the inference path</text>
+                </g>
+
+                <text class="fig__s fig__s--legend fig__a--r" x="1000" y="452">dashed = open</text>
+              </svg>
+            </div>
+            <figcaption class="fig__cap"><b>Fig 3.</b> Swap the Sharer for a vision encoder and most
+            of the machinery survives — the Receiver, the residual add, the gate, all in the same
+            places they occupy in Fig&nbsp;2. What does not survive is everything that depended on
+            both towers reading the same string. The marked components are not simplified here;
+            they are unsolved.</figcaption>
+          </figure>

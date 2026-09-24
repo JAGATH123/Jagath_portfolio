@@ -6,19 +6,16 @@
    rather than as a bag of rules. Everything about one screen lives in
    one place, and there is exactly one media block per breakpoint.
 
-   ORDER
-      1  RESET               element defaults
-      2  TOKENS              :root, in four labelled groups
-      3  BASE                links, selection, focus, skip link
-      4  SHELL + FX          #root, #bg, wordmark, the .fx stack
-      5  SHARED              type scale, small utilities, buttons, slabs
-      6  HEADER + RAILS      .hdr, .nav, .rail
-      7  SCREENS             .screen, then home / about / work / info
-      8  FOOTER + TELEMETRY  .ftr, .tel
-      9  ANIMATION           .glitch and every @keyframes
-     10  RESPONSIVE          one block per breakpoint, widest first
-     11  REDUCED MOTION
-     12  PRINT
+   ORDER — main.css.order is the only source of truth for sequence, and
+   the numeric prefixes are a reading aid. This is its shape, not a copy:
+
+     00–07  foundation      this map, reset, tokens, base, shell + fx,
+                            shared utilities, header + rails, screens
+     08–12  one per screen  home, about, work, research, contact — in
+                            the order the sections appear in the DOM
+     13–14  chrome, motion  footer + telemetry, animation
+     15–16  device tiers    tablet, phone — each self-contained
+     17–18  last word       reduced motion, print
 
    ─── WRITTEN FROM OUTSIDE ────────────────────────────────────────────
    assets/js/scene/index.js sets exactly SIX custom properties, and it sets
@@ -41,14 +38,15 @@
         1   .wordmark-wrap          giant background word
         2   .fx--scrim  .fx--lines
         3   .fx--scan  .fx--grain  .fx--vignette
-        4   .crn  .feed__rec        LOCAL to .feed__frame — that element
+        4   .crn                    LOCAL to .lat__frame — that element
                                     has a clip-path, which makes it a
-                                    stacking context, so these two never
-                                    reach the scale above
+                                    stacking context, so this never
+                                    reaches the scale above
         8   .fx--chrome-top  .fx--chrome-bot
        10   .main                   everything readable
        15   .rail
        19   .tel
+       18   #root::before           phone-tier header base
        20   .hdr  .ftr
        21   #root::after            phone-tier instrument frame
        22   .hdr__right             phone-tier nav, fixed to the

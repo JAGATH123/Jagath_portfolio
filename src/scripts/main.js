@@ -14,7 +14,9 @@
    job now — there is no accordion code here on purpose.
    ═══════════════════════════════════════════════════════════ */
 
+import { createFigures } from './figures.js';
 import { createGlitch } from './glitch.js';
+import { createLattice } from './lattice.js';
 import { createLoop } from './loop.js';
 import { createRouter } from './router.js';
 import { createScene } from './scene/index.js';
@@ -23,11 +25,14 @@ import { createTelemetry } from './telemetry.js';
 
 const loop = createLoop();
 const scene = createScene(); // null if there is no <canvas id="bg"> to draw into
+const lattice = createLattice(); // null if the home field is not in the markup
 const sound = createSound();
 const glitch = createGlitch();
+createFigures(); // null when the research screen is not in the markup
 const telemetry = createTelemetry({ readGrade: () => scene?.gradeName });
 
 if (scene) loop.subscribe(scene.frame);
+if (lattice) loop.subscribe(lattice.frame);
 loop.subscribe(telemetry.frame);
 
 const router = createRouter({

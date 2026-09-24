@@ -1,8 +1,8 @@
 # Jagathguru Jagadeesan — portfolio
 
 A personal portfolio built as static files. No framework, no build-time
-dependencies, nothing to install. Four screens behind a hash router, one
-animated canvas. The page itself loads webfonts from Google — the only
+dependencies, nothing to install. Five screens behind a hash router, one
+animated canvas, and a research page with three hand-drawn diagrams. The page itself loads webfonts from Google — the only
 third-party request it makes.
 
 ```bash
@@ -26,14 +26,16 @@ docs/         architecture.md and deployment.md
 **To change a project**, edit `src/content/projects.json`. Nothing else.
 Six entries, one object each. Adding a seventh is one object.
 
-**To change a screen**, edit `src/sections/{home,about,work,contact}.html`.
+**To change a screen**, edit `src/sections/{home,about,work,research,contact}.html`.
+The research diagrams are inline SVG, one partial each, in `src/partials/figures/`.
 
 **To change a colour**, edit `src/scripts/scene/grades.js` — that is the live
 palette. `src/styles/02-tokens.css` mirrors the coolant grade as the boot and
 no-JS default; keep the two in sync or `make verify` will tell you.
 
 Everything else is chrome that rarely moves: `src/partials/` holds the
-`<head>`, header, rails, footer, canvas backdrop and the `<noscript>` block; `src/components/project-card.html` is the
+`<head>`, header, rails, footer, canvas backdrop, the home screen's cache
+lattice and the `<noscript>` block; `src/components/project-card.html` is the
 case-study template the work screen repeats.
 
 ## Commands
@@ -58,6 +60,13 @@ decorative strings are still carried over verbatim.
 The code here is mine, written from scratch. The design direction is not, and
 pretending otherwise would be worse than saying so.
 
+The research screen reads **Cache-to-Cache** (Fu, Min, Zhang, Yan, Dai, Ouyang,
+Wang — [arXiv:2510.03215](https://arxiv.org/abs/2510.03215), ICLR 2026). That
+result is theirs; the cross-modal question built on it is mine, and the page
+says which is which. The paper is under arXiv's non-exclusive licence, which
+grants third parties nothing, so none of its figures are reproduced — all three
+diagrams are drawn from scratch.
+
 ## Why there's a build step
 
 The site ships as plain HTML, CSS and JS. The build never runs on the host —
@@ -65,7 +74,7 @@ it runs here, or in CI, and produces files any static server can serve.
 
 It exists because the alternative was one 500-line `index.html` with six
 copy-pasted case studies inside it. Now the content is data, each screen is a
-file you can hold in your head, and the stylesheet is eighteen focused
+file you can hold in your head, and the stylesheet is nineteen focused
 partials instead of one 900-line scroll — one per component, then one per
 device tier. See [docs/architecture.md](docs/architecture.md#device-tiers)
 for the breakpoint map and why it is not a simple ladder.
@@ -76,8 +85,8 @@ constructs, no engine, no `node_modules`. See
 
 ## The interesting part
 
-`src/scripts/scene/` — a Canvas 2D gradient field and a four-way colour grade
-that the whole UI reads from. Four named grades cross-fade on navigation and
+`src/scripts/scene/` — a Canvas 2D gradient field and a five-way colour grade
+that the whole UI reads from. Five named grades cross-fade on navigation and
 publish six CSS custom properties, so every border, chip and rule recolours
 per screen.
 
@@ -104,9 +113,13 @@ Things that were deliberate and are easy to undo by accident:
   Google Fonts CSS2 API — putting it on a combined request subsets **every**
   family in it. Doing that once left the display and mono faces with zero
   Latin coverage and the whole site silently rendered in system fallbacks.
+  The kana subset itself is derived from the page at build time; it used to be
+  typed by hand, and two characters had quietly gone missing from it.
 
-`scripts/verify.py` guards the first three. Every check in it exists because
-something broke once.
+`scripts/verify.py` guards all of these, plus the ways a new screen breaks
+without an error: a tab with no screen, an unknown colour grade, a stylesheet
+still calling itself by its old number. Every check in it exists because
+something broke once, and each one has been made to fail on purpose.
 
 ## Accessibility
 
@@ -122,5 +135,5 @@ screen reader on real hardware.
 
 ## Licence
 
-Code under [MIT](LICENSE). The case-study prose is not licensed for reuse, and
-the visual direction is credited above rather than claimed.
+Code under [MIT](LICENSE). The case-study and research prose is not licensed
+for reuse, and the visual direction is credited above rather than claimed.

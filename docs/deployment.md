@@ -45,7 +45,7 @@ to upload silently.
 The structure supports the site; these checks are separate work and are not
 all done:
 
-- [ ] Navigation and browser history across all four screens
+- [ ] Navigation and browser history across all five screens
 - [ ] Keyboard traversal, and the skip link from a non-home screen
 - [ ] A screen reader on real hardware — currently untested
 - [ ] `prefers-reduced-motion` actually freezing the field

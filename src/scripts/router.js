@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    DATUM LINE — router
 
-   Hash routing over the four screens. Owns everything that is a
+   Hash routing over the screens. Owns everything that is a
    direct reflection of "which screen is current": the
    data-active attribute, aria-current on the tabs, the document
    title, the wordmark, and where the keyboard focus goes.
@@ -172,7 +172,8 @@ export function createRouter({ onNavigate } = {}) {
     go(id);
   });
 
-  /* Keyboard: 1-4 jump straight to a screen, but only while the nav has focus.
+  /* Keyboard: a digit jumps straight to that screen (1 to however many
+     sections there are — ROUTES is read from the DOM), but only while the nav has focus.
      WCAG 2.1.4 Character Key Shortcuts requires a single-character shortcut to
      be switchable off, remappable, or active only on focus — this is the third
      option. Unscoped, these digits also swallowed the keys screen readers use

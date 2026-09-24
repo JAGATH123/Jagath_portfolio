@@ -1,0 +1,106 @@
+{{! fig-fuser.html — Fig 2. The residual path along the bottom is drawn at the
+    same weight as the main chain on purpose: it is not a skip-connection
+    decoration, it is the guarantee that the worst case is the Receiver alone.
+    Hover the gate to close it and watch the output not change. }}
+          <figure class="fig" id="fig-2">
+            <div class="fig__frame">
+              <svg class="fig__svg f2" viewBox="0 0 1000 400" role="img" aria-labelledby="fig2-t fig2-d">
+                <title id="fig2-t">Inside one Fuser</title>
+                <desc id="fig2-d">The Receiver's KV and the Sharer's aligned KV are concatenated
+                along the hidden dimension, projected and fused, reweighted per attention head by an
+                input-conditioned modulation layer, then passed through a per-layer gate. The result
+                is added to the Receiver's own cache by a residual path that runs along the bottom of
+                the figure, so a closed gate leaves the cache unchanged.</desc>
+
+                <g class="f2__in">
+                  <rect class="fig__box" x="0" y="30" width="104" height="46"></rect>
+                  <g class="fig__cells">
+                    <rect x="8" y="38" width="12" height="30"></rect><rect x="24" y="38" width="12" height="30"></rect>
+                    <rect x="40" y="38" width="12" height="30"></rect><rect x="56" y="38" width="12" height="30"></rect>
+                    <rect x="72" y="38" width="12" height="30"></rect><rect x="88" y="38" width="12" height="30"></rect>
+                  </g>
+                  <text class="fig__t fig__t--sm fig__a--l" x="0" y="22">RECEIVER KV <tspan class="fig__lock">▪</tspan></text>
+                  <text class="fig__s fig__a--l" x="0" y="90">layer n</text>
+
+                  <rect class="fig__box" x="0" y="124" width="104" height="46"></rect>
+                  <g class="fig__cells fig__cells--alt">
+                    <rect x="8" y="132" width="12" height="30"></rect><rect x="24" y="132" width="12" height="30"></rect>
+                    <rect x="40" y="132" width="12" height="30"></rect><rect x="56" y="132" width="12" height="30"></rect>
+                    <rect x="72" y="132" width="12" height="30"></rect><rect x="88" y="132" width="12" height="30"></rect>
+                  </g>
+                  <text class="fig__t fig__t--sm fig__a--l" x="0" y="116">SHARER KV <tspan class="fig__lock">▪</tspan></text>
+                  <text class="fig__s fig__a--l" x="0" y="184">layer G(n) · equal cell count</text>
+                </g>
+
+                <g class="f2__chain">
+                  <path class="fig__edge" d="M104 53 H 124 V 88 H 144"></path>
+                  <path class="fig__edge" d="M104 147 H 124 V 88 H 144"></path>
+                  <rect class="fig__box" x="144" y="62" width="80" height="52"></rect>
+                  <text class="fig__t fig__t--sm" x="184" y="93">CONCAT</text>
+                  <text class="fig__s" x="184" y="128">along hidden dim</text>
+
+                  <path class="fig__edge fig__edge--arrow" d="M224 88 H 254"></path>
+                  <rect class="fig__box" x="254" y="62" width="76" height="52"></rect>
+                  <text class="fig__t fig__t--sm" x="292" y="93">PROJECT</text>
+                  <path class="fig__edge fig__edge--arrow" d="M330 88 H 350"></path>
+                  <rect class="fig__box" x="350" y="62" width="64" height="52"></rect>
+                  <text class="fig__t fig__t--sm" x="382" y="93">FUSE</text>
+                  <text class="fig__s" x="334" y="146">linear projection · feature fusion</text>
+
+                  <path class="fig__edge fig__edge--arrow" d="M414 88 H 444"></path>
+                  <rect class="fig__box" x="444" y="50" width="124" height="76"></rect>
+                  {{! unequal on purpose: the reweighting is not uniform }}
+                  <g class="f2__heads">
+                    <rect x="452" y="96" width="9" height="22"></rect><rect x="466" y="70" width="9" height="48"></rect>
+                    <rect x="480" y="86" width="9" height="32"></rect><rect x="494" y="60" width="9" height="58"></rect>
+                    <rect x="508" y="102" width="9" height="16"></rect><rect x="522" y="78" width="9" height="40"></rect>
+                    <rect x="536" y="92" width="9" height="26"></rect><rect x="550" y="66" width="9" height="52"></rect>
+                  </g>
+                  <text class="fig__t fig__t--sm" x="506" y="42">HEAD MODULATION</text>
+                  <text class="fig__s" x="506" y="140">input-aware · per-head weights</text>
+                  <path class="fig__edge fig__edge--thin" d="M506 190 V 126"></path>
+                  <text class="fig__s fig__s--edge" x="506" y="202">input-conditioned</text>
+
+                  <path class="fig__edge fig__edge--arrow" d="M568 88 H 598"></path>
+                  <rect class="fig__box fig__box--key f2__gate" x="598" y="62" width="72" height="52"></rect>
+                  <text class="fig__t fig__t--sm" x="634" y="86">GATE</text>
+                  <text class="fig__t fig__t--sm f2__g" x="634" y="106">g<tspan class="f2__gv">ₙ</tspan></text>
+                  <path class="fig__edge fig__edge--arrow" d="M670 88 H 742"></path>
+                </g>
+
+                {{! the anneal inset — the one idea in the figure worth animating }}
+                <g class="f2__anneal">
+                  <rect class="fig__box fig__box--inset" x="598" y="150" width="130" height="60"></rect>
+                  <path class="f2__temp" d="M606 158 L 720 202"></path>
+                  <text class="fig__s fig__s--tiny fig__a--l" x="604" y="166">1.0</text>
+                  <text class="fig__s fig__s--tiny fig__a--r" x="724" y="206">0.001</text>
+                  <text class="fig__s" x="663" y="226">Gumbel-sigmoid, annealed</text>
+                  <text class="fig__s fig__s--tiny" x="663" y="240">differentiable while training → binary at inference</text>
+                </g>
+
+                <g class="f2__sum">
+                  <circle class="fig__box fig__box--key" cx="760" cy="88" r="18"></circle>
+                  <path class="fig__plus" d="M750 88 H 770 M760 78 V 98"></path>
+                  <path class="fig__edge fig__edge--arrow" d="M778 88 H 808"></path>
+                  <rect class="fig__box fig__box--out" x="808" y="62" width="152" height="52"></rect>
+                  <text class="fig__t fig__t--sm" x="884" y="86">FUSED CACHE</text>
+                  <text class="fig__s" x="884" y="104">→ layer n+1</text>
+                </g>
+
+                {{! residual: same weight as the chain above it, because it is the
+                    thing that makes a useless Fuser harmless rather than harmful }}
+                <path class="fig__edge fig__edge--arrow f2__res" d="M52 76 V 300 H 760 V 110"></path>
+                <text class="fig__s fig__s--edge" x="400" y="292">the Receiver's own cache, untouched</text>
+
+                <text class="fig__formula fig__a--l" x="0" y="340">C_F[n] = C[n] + F_n( C[n], C_s[G(n)] )</text>
+                <text class="fig__s fig__a--l" x="0" y="362">▪ frozen — only the Fuser trains</text>
+                <rect class="f2__hit" x="592" y="56" width="84" height="64"></rect>
+                <text class="fig__s f2__tip" x="634" y="134">hover to close the gate</text>
+              </svg>
+            </div>
+            <figcaption class="fig__cap"><b>Fig 2.</b> One of these sits at every aligned layer. It
+            never overwrites the Receiver's cache — it computes a correction and adds it, so a Fuser
+            that learns nothing costs nothing. The gate decides per layer whether that correction is
+            applied at all: soft enough to train by gradient, hard enough by the end of training to
+            be an actual yes or no.</figcaption>
+          </figure>

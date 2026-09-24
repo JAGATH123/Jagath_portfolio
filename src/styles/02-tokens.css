@@ -40,8 +40,7 @@
   /* Light text sits over a canvas whose brightness we do not control,
      so every light-on-dark string carries a shadow. This used to be
      twenty declarations across seven near-identical values. It is two,
-     split by type size. .feed__rec keeps its own — it sits on a
-     photograph, not the canvas, and wants a tighter, weaker shadow. */
+     split by type size. */
   --sh-cap:0 1px 4px rgba(0,0,0,.95);   /* captions and labels, ≤13px */
   --sh-copy:0 1px 5px rgba(0,0,0,.95);  /* body copy and display type */
 }

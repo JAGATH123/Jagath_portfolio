@@ -141,6 +141,20 @@ elif cjk:
     check("every CJK character is in the font subset",
           ["the page has CJK but no &text= subset was emitted"])
 
+# The globe's still frames are baked by scripts/globe_gen.mjs from the same
+# renderer the browser runs. Edit the renderer or journey.json without
+# re-baking and the box jumps on load, or shows yesterday's route with
+# scripting off. Needs Node; without it the check says so rather than pass.
+import shutil
+import subprocess
+if shutil.which("node"):
+    run = subprocess.run(["node", "--no-warnings", "scripts/globe_gen.mjs", "--check"],
+                         cwd=DIST.parent, capture_output=True, text=True)
+    check("the globe stills match the renderer",
+          [] if run.returncode == 0 else [(run.stdout or run.stderr).strip()])
+else:
+    print("  skip  the globe stills match the renderer (node not found)")
+
 print()
 if failures:
     print(f"{len(failures)} check(s) failed")

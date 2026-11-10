@@ -20,7 +20,9 @@
    with the rest of the page for nothing — which is the whole reason it
    is SVG and not a second canvas. assets/js/lattice.js sets geometry and
    opacity; it never sets a colour. */
-.lat{position:relative;flex:none;width:min(328px,42vh);}
+/* 360/46vh, up from 328/42vh when the box lost its frame: a bare globe
+   reads smaller than a framed field of the same width */
+.lat{position:relative;flex:none;width:min(360px,46vh);}
 .lat__cap,.lat__meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--accent);text-shadow:var(--sh-cap);}
 .lat__cap{margin-bottom:8px;}
 .lat__meta{margin-top:8px;font-size:10px;letter-spacing:.1em;opacity:.85;}
@@ -56,3 +58,82 @@
 .crn--tl{top:8px;left:8px;border-top:2px solid var(--accent);border-left:2px solid var(--accent);}
 .crn--tr{top:8px;right:8px;border-top:2px solid var(--accent);border-right:2px solid var(--accent);}
 .crn--bl{bottom:8px;left:8px;border-bottom:2px solid var(--accent);border-left:2px solid var(--accent);}
+
+/* ── the globe ─────────────────────────────────────────────────────────
+   The field the lattice used to be: a sphere drawn in Space Mono by
+   assets/js/globe-render.js, with the three fixes from journey.json on it.
+
+   It has no frame. It keeps .lat and .lat__frame for their place in the
+   layout — every tier's width, order and aspect-ratio still applies, and
+   those numbers are budgets other things depend on — and strips all of
+   the frame's chrome below, so only the globe floats on the page.
+
+   The script sets geometry only: which character goes in which cell, and
+   one font size. Every colour below is a grade property, so the globe
+   cross-fades with the rest of the page for nothing. */
+.lat__frame.glb__frame{
+  border:0;background:none;box-shadow:none;clip-path:none;overflow:visible;
+  /* size, not inline-size: the baked stills are scaled to fit BOTH sides
+     (cqw and cqh below). Height still comes from aspect-ratio. */
+  container-type:size;
+}
+.lat__frame.glb__frame::after{content:none;}
+.glb__frame{
+  /* The framing, per tier. globe.js reads these and hands them to the
+     renderer, so the tiers live here with the rest of the layout:
+     --glb-cy      vertical centre of the globe, 0..1 of the box
+     --glb-fill    diameter as a fraction of the box's shorter side
+     --glb-tilt    degrees the north pole leans toward the viewer
+     --glb-fs-min  the smallest font the grid may use, in px
+     --glb-bleed   how far the grid reaches past the globe, as a multiple
+                   of its diameter: room for the satellites and the stars
+                   to pass outside the box without the box clipping them
+     --glb-bleed-x the same, sideways. Wider, because a fix turning toward
+                   the limb carries its label out past the globe, and
+                   "01+02 CHENNAI" needs ~15 columns there or it falls
+                   back to its number
+     scripts/globe_gen.mjs bakes the stills with the desk and phone values;
+     change them there too, or verify.py reports the stills as stale. */
+  --glb-cy:.5;--glb-fill:.94;--glb-tilt:22;--glb-fs-min:7;--glb-bleed:1.3;--glb-bleed-x:1.6;
+}
+.glb{
+  position:absolute;inset:0;pointer-events:none;
+  --globe-a:var(--accent2);
+  --globe-b:color-mix(in srgb,var(--accent2) 55%,var(--accent));
+  /* Ground classes, raised so land reads solid against the page and the
+     night side stays visible. gc is lifted a touch toward --accent2 but
+     stays under gb; ga/gm (accent2, gm with its glow) remain the route's,
+     the fixes' and the labels', the brightest things on the globe. */
+  --globe-c:color-mix(in srgb,var(--accent2) 18%,var(--accent));
+  --globe-d:color-mix(in srgb,var(--accent) 84%,transparent);
+  --globe-e:color-mix(in srgb,var(--accent) 62%,transparent);
+  --globe-f:color-mix(in srgb,var(--accent) 42%,transparent);
+}
+.glb__art{
+  /* centred on the box and allowed to be larger than it (the bleed) */
+  position:absolute;left:50%;top:50%;translate:-50% -50%;
+  margin:0;white-space:pre;letter-spacing:0;line-height:1;
+  /* Bold: the heavier stroke is what lets the characters hold their own
+     against the page's backdrop. Space Mono 700 is already in the font
+     request (partials/head.html) and has the same 612/1000 advance as 400,
+     so the grid and the stills are unchanged by it. */
+  font-family:var(--mono);font-weight:700;font-variant-ligatures:none;
+  /* No-JS sizing for the baked still: --gw/--gh are the grid's size as a
+     multiple of the box's, so this is the font at which the whole grid
+     lands where the live one will. .612 is Space Mono's advance;
+     globe_gen.mjs and globe.js use the same figure. globe.js replaces this
+     with an inline size once it has measured the real font. */
+  font-size:min(calc(100cqw * var(--gw) / (var(--cols) * .612)),calc(100cqh * var(--gh) / var(--rows)));
+  color:var(--globe-f);user-select:none;
+}
+/* two baked stills, one per box shape; the phone tier swaps them */
+.glb__art--phone{display:none;}
+.glb__art .ga{color:var(--globe-a);}
+.glb__art .gb{color:var(--globe-b);}
+.glb__art .gc{color:var(--globe-c);}
+.glb__art .gd{color:var(--globe-d);}
+.glb__art .ge{color:var(--globe-e);}
+.glb__art .gf{color:var(--globe-f);}
+/* the route and the current fix: the brightest thing on the globe, because
+   they are the only part of it that is information rather than texture */
+.glb__art .gm{color:var(--globe-a);text-shadow:0 0 6px color-mix(in srgb,var(--accent2) 70%,transparent);}

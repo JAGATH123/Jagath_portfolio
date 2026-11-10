@@ -34,8 +34,8 @@ palette. `src/styles/02-tokens.css` mirrors the coolant grade as the boot and
 no-JS default; keep the two in sync or `make verify` will tell you.
 
 Everything else is chrome that rarely moves: `src/partials/` holds the
-`<head>`, header, rails, footer, canvas backdrop, the home screen's cache
-lattice and the `<noscript>` block; `src/components/project-card.html` is the
+`<head>`, header, rails, footer, canvas backdrop, the home screen's globe
+(and the retired cache lattice) and the `<noscript>` block; `src/components/project-card.html` is the
 case-study template the work screen repeats.
 
 ## Commands

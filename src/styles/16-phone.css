@@ -120,7 +120,28 @@
   }
   .ftr__info,.ftr__tech,.ftr__actcol.r,.ftr__actcol .jp{display:none;}
   .ftr__act{gap:0;}
-  .btn--icon{width:28px;height:25px;}
+  /* The toggle LOOKS 28x25, but a 28x25 target is too small to hit. A
+     padded ::before cannot help, because .btn clips its own hit area with
+     clip-path. So the button becomes a bare 44x41 target, pulled back to
+     its 28x25 slot by -8px margins, and its frame — border, fill and
+     chamfer — is drawn by ::before inside it. Hover and focus fill the
+     frame, not the target. */
+  .btn--icon{
+    position:relative;isolation:isolate;width:44px;height:41px;margin:-8px;
+    border:0;background:none;clip-path:none;
+  }
+  .btn--icon::before{
+    content:"";position:absolute;inset:8px;z-index:-1;
+    border:2px solid var(--accent);background:rgba(6,8,14,.35);
+    clip-path:polygon(0 0,100% 0,100% 70%,88% 100%,0 100%);
+    transition:background .16s ease;
+  }
+  .btn--icon:focus-visible{background:none;outline-offset:-6px;}
+  .btn--icon:focus-visible::before{background:var(--accent);}
+  @media (hover:hover){
+    .btn--icon:hover{background:none;}
+    .btn--icon:hover::before{background:var(--accent);}
+  }
   .btn--icon svg{width:14px;height:14px;}
 
   /* ── nav: the thumb zone ─────────────────────────────────────────────
@@ -206,7 +227,27 @@
      gets both: a real scrim under the name and a shadow on it. */
   .lat__frame::after{background:linear-gradient(to bottom,rgba(0,0,0,0) 26%,rgba(5,6,10,.62) 54%,rgba(5,6,10,.95) 70%,rgba(5,6,10,.99));}
   .home__copy .display,.home__copy .eyebrow{text-shadow:var(--sh-copy);}
+  /* One line through 430px: at 13px/.24em the 36-character eyebrow costs
+     ~400px and broke as "▶ INDEX // RUNNING / SINCE YOU ARRIVED" over the
+     globe's fading edge. 12px/.16em is ~333px. The small-phone tiers below
+     restate it smaller. */
+  .home__copy .eyebrow{font-size:12px;letter-spacing:.16em;}
   .crn{display:none;}
+  /* The globe has no frame and so no scrim: the name and eyebrow pull up
+     over the bottom of the box, and the globe dissolves into the page
+     there instead. The mask is on the art, not the box, so it moves with
+     whatever the grid draws; the circle is whole above 58%. Smaller than
+     the box so its top clears the header, and tilted to 18° so India sits
+     near half height, above the fade. */
+  /* full-bleed already: the box is the viewport's width, wider than any
+     sideways bleed would ask for */
+  .glb__frame{--glb-cy:.47;--glb-fill:.84;--glb-tilt:18;--glb-bleed-x:1.3;}
+  .glb__art{
+    -webkit-mask-image:linear-gradient(to bottom,#000 58%,transparent 86%);
+    mask-image:linear-gradient(to bottom,#000 58%,transparent 86%);
+  }
+  .glb__art--desk{display:none;}
+  .glb__art--phone{display:block;}
 
   .rolerow{gap:7px 10px;margin:11px 0 16px;}
   .role__sub{font-size:10.5px;letter-spacing:.13em;}
@@ -332,6 +373,10 @@
     --ftr-h:calc(60px + env(safe-area-inset-bottom));
   }
   .hdr{padding-top:calc(9px + env(safe-area-inset-top));}
+  /* The base under the header: on a 52px header the portrait rule's
+     20px fade started at 32px, so a scrolled line read through the brand
+     row. Here it is solid to the header's foot and fades below it. */
+  #root::before{height:calc(var(--hdr-h) + 16px);}
   .tel{top:calc(14px + env(safe-area-inset-top));}
   .ftr{top:calc(11px + env(safe-area-inset-top));}
   .hdr__right{padding:6px 10px calc(6px + env(safe-area-inset-bottom));}
@@ -367,9 +412,19 @@
      the portrait tier's -1 — the copy leads when they are side by side. */
   .home{flex-direction:row;align-items:center;gap:20px;}
   .home__copy{margin-top:0;flex:1 1 auto;}
-  .lat{order:1;flex:none;width:min(200px,44vh);margin-inline:0;}
+  /* 220/50vh, up from 200/44vh: at 844x390 the field was 171px wide and
+     the globe 21 columns across, too small to be anything but texture */
+  .lat{order:1;flex:none;width:min(220px,50vh);margin-inline:0;}
   .lat__frame{aspect-ratio:11/7;clip-path:polygon(0 0,100% 0,100% 88%,88% 100%,0 100%);}
   .lat__frame::after{background:linear-gradient(140deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.4));}
+  /* Side by side there is no pull-up, so no fade; the box goes 4/3 so the
+     circle is not squeezed by an 11/7 height, and the grid may drop to
+     6px so the globe is ~37 columns across rather than ~21. */
+  .lat__frame.glb__frame{aspect-ratio:4/3;}
+  .glb__frame{--glb-cy:.5;--glb-fill:.94;--glb-tilt:24;--glb-fs-min:6;--glb-bleed-x:1.6;}
+  .glb__art{-webkit-mask-image:none;mask-image:none;}
+  .glb__art--desk{display:block;}
+  .glb__art--phone{display:none;}
   .ctarow{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px;}
 
   /* INFO stacked is 368px against a 281px box, which put both profile
@@ -395,6 +450,7 @@
    the rules in the main block already fit. */
 @media (max-width:380px){
   :root{--pad-x:15px;}
+  .home__copy .eyebrow{font-size:11.5px;letter-spacing:.16em;}
   /* At 13px/.24em a mono eyebrow costs ~11px a character, so even a
      30-character one fills 330px of content. Smaller here keeps the long
      ones to two balanced lines instead of three. */
@@ -476,6 +532,9 @@
    under 700px tall too and has a layout of its own. */
 @media (max-width:760px) and (max-height:700px) and (orientation:portrait){
   .lat__frame{aspect-ratio:5/2;}
+  /* a 150px band: at the 7px floor the globe is 29 columns across, one
+     under the point where labels drop their names. 6px gives ~34. */
+  .glb__frame{--glb-fs-min:6;}
   .home__copy{margin-top:-40px;}
   .rolerow{margin:8px 0 12px;}
   .slab-lines{gap:5px;}
@@ -487,7 +546,7 @@
    A 4-inch phone, or a larger one with Display Zoom on. Long eyebrows fit
    one line at this size, and the lede drops a line. */
 @media (max-width:340px){
-  .eyebrow{font-size:10.5px;letter-spacing:.1em;}
+  .eyebrow,.home__copy .eyebrow{font-size:10.5px;letter-spacing:.1em;}
   .lede{font-size:12px;line-height:1.6;}
 }
 /* ...and if it is also a short one, the field band goes: a 568px screen has

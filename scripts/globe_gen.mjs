@@ -1,0 +1,172 @@
+#!/usr/bin/env node
+/*
+ * globe_gen.mjs — dev-time generator for the home globe. Not run by build.py.
+ *
+ * It writes two files, both committed:
+ *
+ *   src/scripts/globe-land.js     the land mask the renderer reads, as
+ *                                 run-length rows (only with --land)
+ *   src/partials/globe-still.html the still frames baked into the markup, so
+ *                                 the box is a globe and not an empty frame
+ *                                 with scripting off, and so the first live
+ *                                 frame lands on the same picture
+ *
+ * The still is drawn by src/scripts/globe-render.js — the module the browser
+ * runs — not by a second renderer here. That is why this is Node and not
+ * Python like journey_map.py: one renderer cannot drift from itself.
+ *
+ * Usage:
+ *   node scripts/globe_gen.mjs --land path/to/ne_110m_land.geojson
+ *   node scripts/globe_gen.mjs              # re-bake the stills only
+ *   node scripts/globe_gen.mjs --check      # exit 1 if the stills are stale
+ *
+ * Re-bake after editing src/content/journey.json or the renderer. Land comes
+ * from Natural Earth 1:110m land (public domain), naturalearthdata.com.
+ * No dependencies: node:fs and node:path only.
+ */
+
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const LAND_OUT = resolve(ROOT, 'src/scripts/globe-land.js');
+const STILL_OUT = resolve(ROOT, 'src/partials/globe-still.html');
+
+/* One cell per degree. The globe is ~50 columns across, so a column is
+   about 3.6° at the centre; a 1° mask, interpolated, is already finer than
+   any character can show. 0.5° doubled the bytes and changed nothing. */
+const RES = 1;
+
+/* The stills, one per shape of box. Each is baked at that box's real
+   client size with the same framing the stylesheet gives the tier, so the
+   first live frame there lands on the same picture. Keep these in step
+   with the --glb-* properties in 08-home.css and 16-phone.css.
+
+   desk   .lat is min(360px, 46vh) at 11/12 (the frame has no border now)
+   phone  the full-bleed field at 390 wide, 4/3
+
+   Anywhere else the stylesheet scales the desk still by container units,
+   and the live field takes over at the box's own size. */
+const STILLS = [
+  { name: 'desk', w: 360, h: 392, opt: { cy: 0.5, fill: 0.94, tilt: 22, fsMin: 7, bleed: 1.3, bleedX: 1.6 } },
+  { name: 'phone', w: 390, h: 293, opt: { cy: 0.47, fill: 0.84, tilt: 18, fsMin: 7, bleed: 1.3, bleedX: 1.3 } },
+];
+/* Space Mono's advance is 612/1000 em. 08-home.css uses the same number
+   to scale the stills, and globe.js measures the real one. */
+const ADVANCE = 0.612;
+
+const ALPHA = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function arg(name) {
+  const i = process.argv.indexOf(name);
+  return i < 0 ? null : process.argv[i + 1];
+}
+
+/* even-odd over every ring of every polygon: holes subtract for free */
+function rings(geojson) {
+  const out = [];
+  for (const f of geojson.features) {
+    const g = f.geometry;
+    const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
+    for (const poly of polys) {
+      for (const ring of poly) {
+        let x0 = Infinity; let x1 = -Infinity; let y0 = Infinity; let y1 = -Infinity;
+        for (const [x, y] of ring) {
+          x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+        }
+        out.push({ ring, x0, x1, y0, y1 });
+      }
+    }
+  }
+  return out;
+}
+
+function inside(lon, lat, all) {
+  let hit = false;
+  for (const { ring, x0, x1, y0, y1 } of all) {
+    if (lon < x0 || lon > x1 || lat < y0 || lat > y1) continue;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i, i += 1) {
+      const [xi, yi] = ring[i];
+      const [xj, yj] = ring[j];
+      if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) hit = !hit;
+    }
+  }
+  return hit;
+}
+
+function token(n) {
+  let s = '';
+  while (n >= 61) { s += 'Z'; n -= 61; }
+  return s + ALPHA[n];
+}
+
+function bakeLand(path) {
+  const all = rings(JSON.parse(readFileSync(path, 'utf8')));
+  const w = 360 / RES;
+  const h = 180 / RES;
+  let rle = '';
+  let landCells = 0;
+  for (let r = 0; r < h; r += 1) {
+    const lat = 90 - (r + 0.5) * RES;
+    let land = 0;
+    let n = 0;
+    for (let c = 0; c < w; c += 1) {
+      /* Antarctica's ring runs along -90 in the source, and the 110m data
+         leaves a sliver at the pole; the south cap is land either way. */
+      const v = lat < -84 ? 1 : inside(-180 + (c + 0.5) * RES, lat, all) ? 1 : 0;
+      landCells += v;
+      if (v === land) { n += 1; continue; }
+      rle += token(n);
+      land = v;
+      n = 1;
+    }
+    rle += token(n);
+  }
+  const body = `/* GENERATED by scripts/globe_gen.mjs from Natural Earth 1:110m land
+   (public domain). Do not edit — rerun the generator.
+
+   ${w}x${h} cells, one per ${RES}°, row 0 at the north pole. Each row is
+   run lengths, sea first, alternating; see decodeLand() in globe-render.js. */
+export const LAND = { w: ${w}, h: ${h}, rle: '${rle}' };
+`;
+  writeFileSync(LAND_OUT, body);
+  console.log(`  land   ${w}x${h}, ${(100 * landCells / (w * h)).toFixed(1)}% land, ${body.length} B → ${LAND_OUT}`);
+}
+
+async function renderStills() {
+  const journey = JSON.parse(readFileSync(resolve(ROOT, 'src/content/journey.json'), 'utf8'));
+  const fixes = journey.map((j) => ({ num: j.num, place: j.place, lat: j.lat, lon: j.lon, now: j.state === 'is-now' }));
+  /* a fresh import, so a land file written a moment ago is the one used */
+  const { createRenderer } = await import(`${pathToFileURL(resolve(ROOT, 'src/scripts/globe-render.js')).href}?t=${Date.now()}`);
+  const lines = [];
+  const notes = [];
+  for (const s of STILLS) {
+    const r = createRenderer({ fixes });
+    const { fs, cols, rows, gw, gh } = r.layout(s.w, s.h, ADVANCE, s.opt);
+    const art = r.draw(0, 0, 0, { eol: '&#10;', rest: true });
+    /* one line per still, newlines as &#10;: build.py re-indents every line
+       of an include, which inside a <pre> would shear the picture */
+    lines.push(`<pre class="glb__art glb__art--${s.name}" style="--cols:${cols};--rows:${rows};--gw:${+gw.toFixed(4)};--gh:${+gh.toFixed(4)}">${art}</pre>`);
+    notes.push(`${s.name} ${cols}x${rows} at ${fs}px`);
+  }
+  return { html: `${lines.join('\n')}\n`, notes };
+}
+
+const land = arg('--land');
+if (land) bakeLand(resolve(land));
+const { html, notes } = await renderStills();
+if (process.argv.includes('--check')) {
+  /* verify.py runs this: a still that no longer matches the renderer or
+     journey.json is a globe that jumps on load, or shows an old route */
+  let current = '';
+  try { current = readFileSync(STILL_OUT, 'utf8'); } catch { /* missing counts as stale */ }
+  if (current !== html) {
+    console.log('src/partials/globe-still.html is stale. Run: node scripts/globe_gen.mjs');
+    process.exit(1);
+  }
+  console.log('globe stills are current');
+} else {
+  writeFileSync(STILL_OUT, html);
+  console.log(`  stills ${notes.join(', ')}, ${html.length} B → ${STILL_OUT}`);
+}

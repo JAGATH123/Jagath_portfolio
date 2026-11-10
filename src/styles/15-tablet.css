@@ -80,6 +80,39 @@
      tall, so the field clears the footer bar at rest. */
   .lat{width:100%;}
   .lat__frame{aspect-ratio:11/4;}
+  /* The band keeps its 11/4, which the layout budget above depends on.
+     With no frame the band is invisible, so the globe is simply a whole
+     circle floating in it — no crop — and the grid bleeds less than
+     elsewhere, so a satellite never crosses the copy above. */
+  .glb__frame{--glb-fill:.94;--glb-bleed:1.12;}
+}
+
+/* Tall portrait tablets (820x1180, 834x1194, 1024x1366) have 150-350px
+   of empty screen under an 11/4 band. A 2/1 box spends some of it on a
+   bigger globe and still clears the footer; 768x1024 has no such slack
+   and keeps the band. */
+@media (min-width:761px) and (max-width:1150px) and (min-height:1100px) and (orientation:portrait){
+  .lat__frame.glb__frame{aspect-ratio:2/1;}
+}
+
+/* ═══════════════════ NARROW DESKTOP ═══════════════════
+   1151-1400px: above the tablet tier, so the footer keeps its desktop
+   shape, but the centred telemetry pill (~500px) does not fit between the
+   footer's two info blocks (~460px from the left) and its actions. At
+   1180 they overlapped by ~115px; at 1366 they touched.
+   DEVELOPED BY JAGATHGURU goes — the name is the page's own <h1> and the
+   brand mark, so the footer was the third place it was said — and UP
+   goes from the pill. LOCATION stays: "remote by default" says something
+   nothing else on the page does. Nothing else moves. */
+@media (min-width:1151px) and (max-width:1400px){
+  .ftr__info > :first-child{display:none;}
+  .tel__i--up{display:none;}
+}
+/* From 1401 both info blocks fit again, but the full pill still ran ~6px
+   into LOCATION until 1440, where the desktop layout clears it. Only UP
+   goes in this sliver. */
+@media (min-width:1401px) and (max-width:1439px){
+  .tel__i--up{display:none;}
 }
 
 /* ═══════════════════ SHORT VIEWPORTS ═══════════════════

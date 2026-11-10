@@ -115,7 +115,7 @@ full-bleed moment. Reserved chrome goes from 296px of an 852px screen to
 
 ## Scripts
 
-Twelve ES modules. `main.js` wires them together and holds no logic of its own.
+Fifteen ES modules. `main.js` wires them together and holds no logic of its own.
 
 ```
 main.js       constructs and connects. 63 lines.
@@ -127,8 +127,13 @@ scene/        canvas field, colour grades, the six CSS custom properties
 telemetry.js  clock, uptime, FPS, grade readout
 sound.js      WebAudio blip and its persisted toggle
 glitch.js     the transition sweep
-lattice.js    the home field: sets geometry and opacity on an SVG whose
-              colours all come from CSS, so it recolours for free
+globe.js      the home field: sizes, measures and drives the globe —
+              30fps off loop.js, pointer tilt, reduced motion, tab hidden
+globe-render.js  pure renderer: (grid, t) → spans. Shared with
+              scripts/globe_gen.mjs, which bakes the no-JS still with it
+globe-land.js GENERATED land mask (Natural Earth 1:110m, 1°, run-length)
+lattice.js    the old cache lattice. No longer imported; kept until it is
+              decided whether to delete it with partials/lattice.html
 figures.js    adds .is-seen to a research figure on first scroll-in
 ```
 

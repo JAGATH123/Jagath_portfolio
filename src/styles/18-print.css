@@ -21,7 +21,7 @@
 
   /* decoration, or wholly dependent on the fixed shell */
   #bg,.wordmark-wrap,.fx,.rail,.tel,.glitch,.glitch.on,.skip,
-  .nav,.nav__cap,.hire,.ftr__act,.lat,.cue,.proj__caret,
+  .nav,.nav__cap,.hire,.ftr__act,.lat,.jny__panel,.cue,.proj__caret,
   .brand__hex,.btn__hazard,.techhex,.dot{display:none;}
 
   .main,.hdr,.ftr{position:static;}
@@ -42,7 +42,7 @@
   .display,.slab,.lede,.role__sub,.status,.proj__name,.proj__line,
   .proj__meta span,.case p,.metric__lbl,.statline dd,.contact__v,
   .info__note,.ftr__v,.elab p,.elab em,.ident__lead,.ident__body,
-  .ident__next,.creed{color:#111;text-shadow:none;}
+  .ident__next,.creed,.jny__pl,.jny__co,.jny__role,.jny__org{color:#111;text-shadow:none;}
 
   /* Accent. --accent is a tint chosen for a black canvas and lands near
      2:1 on paper. Re-point the COLOURS rather than the token: scene.js
@@ -51,6 +51,7 @@
      #0b4da2 is 8.1:1 on white. */
   .eyebrow,.jp,.brand__word,.role,.contact__k,.statline dt,.ftr__k,
   .proj__num,.proj__meta,.case h4,.metric,.ident__next span,
+  .jny__num,.jny__kind,.jny__when,
   a,.btn,.contact__v--link{color:#0b4da2;text-shadow:none;}
 
   /* anything whose legibility came from a filled background */
@@ -58,6 +59,8 @@
   .slab,.role,.chip{padding:0;}
   .btn{border-color:#0b4da2;}
   .creed,.ident{border-color:#0b4da2;}
+  .jny__fix{border-top-color:#bbb;break-inside:avoid;}
+  .jny__fix.is-now .jny__when::before{display:none;}
   .creed{padding-right:0;}
   .elab p.elab__kick{border-left-color:#0b4da2;}
 

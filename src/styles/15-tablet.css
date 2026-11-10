@@ -132,6 +132,17 @@
   .display--xl{font-size:clamp(34px,5vw,64px);}
 }
 
+/* ...and where short meets tablet, the 100px above is too little. The 92px
+   bar it was measured against is the desktop one, at bottom:0; on a tablet
+   the bar rides 34px up on the telemetry strip, and the pair measures
+   103px from the bottom edge — the bar's labels sat 3px inside the content
+   box at rest, and the scrollport fade (07-screens.css), which ends 22px
+   out from --ftr-h, left a full line of copy readable under them. 126 is
+   that 103 plus the fade. */
+@media (min-width:761px) and (max-width:1150px) and (min-height:481px) and (max-height:800px){
+  :root{--ftr-h:126px;}
+}
+
 /* ── research ──────────────────────────────────────────────────────────
    The figures are 1000 units wide with 9.5px labels in them. Scaled to a
    768px column that lands under 7px, which is unreadable — so below the

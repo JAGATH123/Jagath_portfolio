@@ -24,7 +24,7 @@
   color:rgba(255,255,255,.86);text-shadow:var(--sh-copy);
 }
 .elab em{color:var(--accent2);font-style:normal;}
-/* .elab__kick used to be three !important declarations losing a
+/* .elab__kick used to be three  declarations losing a
    specificity argument with .elab p (0,1,1) from (0,1,0). Qualifying
    the selector wins it honestly at (0,2,1). */
 .elab p.elab__kick{
@@ -85,3 +85,145 @@
 .statline{display:flex;flex-wrap:wrap;gap:14px 44px;margin-top:30px;}
 .statline dt{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--accent);margin-bottom:3px;text-shadow:var(--sh-cap);}
 .statline dd{font-family:var(--mono);font-size:15px;color:#fff;text-shadow:var(--sh-copy);}
+
+/* ── where: the journey map ───────────────────────────────────────────
+   The panel is built like the home lattice (caption row, 2px frame,
+   corner brackets, meta row) so the two read as the same instrument.
+   The picture is partials/journey-map.html, generated; the <ol> is the
+   content. Every colour is a grade property — the map goes ember on
+   this screen and would follow any other grade for nothing.
+
+   Markers are HTML laid over the SVG rather than drawn inside it, so a
+   label stays 12px on a phone instead of shrinking with the viewBox.
+   They sit at --x/--y, percentages of the frame, which only line up
+   with the land because the frame's aspect-ratio IS the viewBox's
+   (--ar, written by the generator). Never give .jm__frame a height. */
+.jny{margin-top:44px;}
+.jny > .eyebrow{margin-bottom:14px;}
+.jny__cap,.jny__meta{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--accent);text-shadow:var(--sh-cap);}
+.jny__cap{margin-bottom:8px;}
+.jny__meta{margin-top:8px;font-size:10px;letter-spacing:.1em;opacity:.85;}
+
+/* content-box, so the 16:9 is the drawing area and not the outside of
+   the 2px border: with border-box the SVG letterboxed by 1.6px while the
+   markers did not, and on a phone they drifted most of a cell off land.
+   .8 rather than the lattice's .55 behind it: at this width the wordmark
+   behind the panel shows through the sea and the coast stops reading. */
+.jm__frame{
+  position:relative;box-sizing:content-box;aspect-ratio:var(--ar);overflow:hidden;
+  container-type:inline-size;
+  border:2px solid var(--accent);background:rgba(4,6,12,.8);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%);
+  box-shadow:0 18px 60px rgba(0,0,0,.5);
+}
+.jm__svg{position:absolute;inset:0;display:block;width:100%;height:100%;}
+/* the inset owns the top-right corner the way the chamfer owns the
+   bottom-right one, so that bracket would only collide with its frame */
+.jm__frame .crn--tr{display:none;}
+
+/* land: the lattice tile, at the lattice's resting weight */
+.jm__unit{fill:var(--accent);}
+.jm__land{opacity:.2;}
+
+/* the zoom inset — opaque, so the continent under it does not show
+   through and read as a second coastline */
+.jm__inset-bg{fill:rgba(4,6,12,.94);}
+.jm__inset .jm__land{opacity:.32;}
+.jm__inset-frame{fill:none;stroke:var(--accent);stroke-width:1.5;}
+.jm__zone{fill:none;stroke:var(--accent2);stroke-width:1;}
+.jm__lead{fill:none;stroke:var(--accent);stroke-width:1;stroke-dasharray:2 3;opacity:.7;}
+.jm__icap{
+  position:absolute;left:var(--x);top:var(--y);width:var(--w);
+  padding:5px 0 0 7px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--accent);
+  text-shadow:var(--sh-cap);white-space:nowrap;
+}
+
+/* the route: .dashline's 6/6 rhythm, in --accent2 so it separates
+   from the land it crosses */
+.jm__route{fill:none;stroke:var(--accent2);stroke-width:1.5;stroke-dasharray:6 6;opacity:.85;}
+
+/* markers. A diamond, not a dot: round is .dot, and .dot means "live".
+   A diamond reads as a survey fix and its centre is unambiguous.
+   Filled = work, hollow = study, --accent2 = where I am now. */
+.jm__pin{
+  position:absolute;left:var(--x);top:var(--y);z-index:2;
+  display:flex;align-items:center;gap:7px;
+  translate:-6px -50%;
+}
+.jm__pin[data-side="l"]{flex-direction:row-reverse;translate:calc(-100% + 6px) -50%;}
+.jm__mk{
+  flex:none;width:12px;height:12px;box-sizing:border-box;rotate:45deg;
+  border:2px solid var(--accent);background:rgba(4,6,12,.9);
+  transition:scale .18s ease,background-color .18s ease;
+}
+.jm__pin--work .jm__mk{background:var(--accent);}
+.jm__pin.is-now .jm__mk{border-color:var(--accent2);background:var(--accent2);}
+.jm__pin.is-now .jm__mk::after{
+  content:"";position:absolute;inset:-6px;border:1px solid var(--accent2);
+  animation:pulse 2.4s ease-in-out infinite;
+}
+.jm__lbl{
+  padding:2px 7px 3px;
+  background:rgba(6,8,14,.78);
+  clip-path:polygon(0 0,100% 0,100% 62%,calc(100% - 6px) 100%,0 100%);
+  font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.06em;
+  color:#fff;text-shadow:var(--sh-cap);white-space:nowrap;
+}
+.jm__n{margin-right:5px;font-weight:700;color:var(--accent);}
+
+/* A narrow frame makes a small inset: under 780px the inset markers
+   keep their number and drop the name, which is printed in full in the
+   list directly below. A container query, so it follows the frame's
+   width and not the viewport's — the tablet frame is 620px wide on a
+   screen that is 820. */
+@container (max-width:780px){
+  .jm__pin--i .jm__lbl{font-size:0;padding:1px 4px 2px;}
+  .jm__pin--i .jm__n{margin:0;font-size:10px;}
+}
+
+/* the list: three fixes in date order, one column each */
+.jny__list{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+  margin:20px 0 0;padding:0;list-style:none;
+}
+.jny__fix{
+  container-type:inline-size;
+  padding:12px 0 0;border-top:1px solid color-mix(in srgb,var(--accent) 34%,transparent);
+  transition:border-color .18s ease;
+}
+/* number | place | kind on a grid, so a long place name wraps inside
+   its own column instead of leaving the number alone on a line above */
+.jny__head{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:baseline;gap:4px 9px;}
+/* a column too narrow for KATTANKULATHUR and its kind on one line
+   (the tablet's three ~200px columns) moves the kind under the name */
+@container (max-width:250px){
+  .jny__head{grid-template-columns:auto minmax(0,1fr);}
+  .jny__kind{grid-column:2;}
+}
+.jny__num{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--accent);text-shadow:var(--sh-cap);}
+.jny__pl{font-family:var(--disp);font-weight:600;font-size:16px;letter-spacing:.03em;color:#fff;text-shadow:var(--sh-copy);}
+.jny__kind{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--accent);text-shadow:var(--sh-cap);}
+.jny__co{margin:0;margin-top:4px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.62);text-shadow:var(--sh-cap);}
+.jny__when{margin:0;margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--accent);text-shadow:var(--sh-cap);}
+.jny__fix.is-now .jny__when::before{
+  content:"";display:inline-block;width:6px;height:6px;margin-right:7px;vertical-align:1px;
+  border-radius:50%;background:var(--accent2);animation:blink 1.4s steps(1) infinite;
+}
+.jny__role{margin:0;margin-top:5px;font-family:var(--mono);font-size:13.5px;line-height:1.5;color:#fff;text-shadow:var(--sh-copy);}
+.jny__org{margin:0;margin-top:2px;font-family:var(--mono);font-size:12px;line-height:1.5;color:rgba(255,255,255,.72);text-shadow:var(--sh-copy);}
+
+/* each half lights the other. :has() so it needs no script; inside
+   (hover:hover) so a tap on a phone does not leave one stuck lit.
+   One selector per fix, because CSS cannot match a number to a number:
+   a fourth entry in journey.json needs a fourth line in each list. */
+@media (hover:hover){
+  .jny__fix:hover{border-top-color:var(--accent);}
+  .jny:has(.jny__fix--01:hover) .jm__pin--01 .jm__mk,
+  .jny:has(.jny__fix--02:hover) .jm__pin--02 .jm__mk,
+  .jny:has(.jny__fix--03:hover) .jm__pin--03 .jm__mk,
+  .jm__pin:hover .jm__mk{scale:1.35;}
+  .jny:has(.jm__pin--01:hover) .jny__fix--01,
+  .jny:has(.jm__pin--02:hover) .jny__fix--02,
+  .jny:has(.jm__pin--03:hover) .jny__fix--03{border-top-color:var(--accent);}
+}

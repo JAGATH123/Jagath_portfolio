@@ -176,7 +176,9 @@
   .tab[aria-current="page"] .tab__n{opacity:.85;}
 
   /* ── screens ── */
-  .screen{overflow-x:hidden;}
+  /* no scrollport fade (07-screens.css): the header base above and the
+     nav bar are opaque, and the screens scroll under them by design. */
+  .screen{overflow-x:hidden;-webkit-mask-image:none;mask-image:none;}
 
   /* ── home ────────────────────────────────────────────────────────────
      Column flex with align-items:flex-start does NOT stretch children,
@@ -257,7 +259,7 @@
   /* ── work ────────────────────────────────────────────────────────────
      Back onto the tokens: the base rule hardcodes 106/94px, which cannot
      track a header that is now 72px. */
-  .screen--work{padding-block:var(--hdr-h) var(--ftr-h);}
+  .screen--work{--scr-t:var(--hdr-h);--scr-b:var(--ftr-h);}
   .projects{gap:8px;}
   /* The card has to answer "and what came of it" at rest. Six taps to
      read six outcomes is six taps too many on a phone, so tech/year —

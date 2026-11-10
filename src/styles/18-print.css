@@ -31,6 +31,7 @@
   .screen{
     position:static;visibility:visible;opacity:1;display:block;
     overflow:visible;padding:0;margin:0 0 22px;
+    -webkit-mask-image:none;mask-image:none;
   }
   .screen + .screen{border-top:1px solid #bbb;padding-top:22px;}
   .screen > *,.screen[data-active] > *{max-width:none;margin:0;animation:none;}

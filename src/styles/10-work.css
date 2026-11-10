@@ -7,8 +7,10 @@
    the other three screens. This was #work — the file's only ID selector
    and a pure style hook, which had already drifted 4px out of sync with
    --hdr-h at the 460px breakpoint. It is a class now, and at ≤820 it
-   goes back to reading the tokens so it cannot drift again. */
-.screen--work{padding-block:106px 94px;}
+   goes back to reading the tokens so it cannot drift again. It sets
+   --scr-t/--scr-b rather than padding-block so the scrollport fade in
+   07-screens.css moves in with it. */
+.screen--work{--scr-t:106px;--scr-b:94px;}
 
 /* the count is generated from projects.json, so it cannot drift */
 .work__head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;}

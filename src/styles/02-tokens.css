@@ -27,7 +27,8 @@
   /* ── c. LAYOUT METRICS ────────────────────────────────────────────
      The breakpoints below move THESE, not the rules that use them.
      --hdr-h / --ftr-h are the vertical space the fixed chrome reserves;
-     .screen turns them into padding and into scroll-padding. */
+     .screen turns them into padding, into scroll-padding, and into the
+     edge fade that hides content scrolling under that chrome. */
   --pad-x:118px;
   --hdr-h:132px;
   --ftr-h:116px;

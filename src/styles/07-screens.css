@@ -9,7 +9,43 @@
 .screen{
   position:absolute;inset:0;
   display:flex;justify-content:center;
-  padding:var(--hdr-h) var(--pad-x) var(--ftr-h);
+  /* The block padding goes through two properties of the screen's own so
+     the mask below can read it back. A screen that sits tighter to the
+     chrome (.screen--work) moves --scr-t/--scr-b, never padding-block, or
+     its fade band and its content box come apart. */
+  --scr-t:var(--hdr-h);
+  --scr-b:var(--ftr-h);
+  padding:var(--scr-t) var(--pad-x) var(--scr-b);
+  /* THE SCROLLPORT FADES, NOT THE CHROME. Padding reserves the chrome's
+     space only at the two scroll ends; mid-scroll, a long screen runs
+     straight under the brand, the nav and the footer bar, and the
+     .fx--chrome-* gradients cannot help — they sit at z 8, under .main.
+     A mask on .screen does not scroll with its content, so it fades
+     everything to nothing across the header and footer bands and shows
+     the canvas through them.
+     The band lies wholly inside the padding: opaque from --fade-in inside
+     the content edge, gone --fade further out. At rest nothing is masked
+     — home, info and a closed work list are untouched — and a focus
+     ring, which reaches 5px past its control, still lands on (near-)
+     opaque ground. 22px out from 132/112 lands at or below the header's
+     measured bottom edge (108/86) in every tier above the phone, and 22px
+     out from --ftr-h at or above the footer bar's top edge — 15-tablet.css
+     keeps the tablet-short reservation honest for exactly this reason.
+     The phone tier switches this off: its header and nav bar are opaque,
+     and a fade under them would only shorten an 852px screen. `black` is
+     alpha here, not a colour. */
+  --fade:18px;
+  --fade-in:4px;
+  -webkit-mask-image:linear-gradient(to bottom,
+    transparent calc(var(--scr-t) - var(--fade-in) - var(--fade)),
+    black calc(var(--scr-t) - var(--fade-in)),
+    black calc(100% - var(--scr-b) + var(--fade-in)),
+    transparent calc(100% - var(--scr-b) + var(--fade-in) + var(--fade)));
+  mask-image:linear-gradient(to bottom,
+    transparent calc(var(--scr-t) - var(--fade-in) - var(--fade)),
+    black calc(var(--scr-t) - var(--fade-in)),
+    black calc(100% - var(--scr-b) + var(--fade-in)),
+    transparent calc(100% - var(--scr-b) + var(--fade-in) + var(--fade)));
   /* The header and footer are fixed and float over this box. Without
      scroll-padding, tabbing to a control near an edge scrolls it flush
      to the scrollport and straight underneath them — WCAG 2.4.11. The

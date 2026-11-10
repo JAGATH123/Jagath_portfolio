@@ -1,0 +1,47 @@
+[
+  {
+    "num": "01",
+    "place": "KATTANKULATHUR",
+    "cc": "IN",
+    "lat": 12.8231,
+    "lon": 80.0442,
+    "when": "YYYY — YYYY",
+    "role": "Bachelor's — Computer Science",
+    "org": "SRM Institute of Science and Technology",
+    "kind": "study",
+    "kindLabel": "STUDY",
+    "state": "",
+    "inset": true,
+    "coord": "12.8231° N 80.0442° E"
+  },
+  {
+    "num": "02",
+    "place": "CHENNAI",
+    "cc": "IN",
+    "lat": 13.0827,
+    "lon": 80.2707,
+    "when": "MMM YYYY — MMM YYYY",
+    "role": "Software Developer",
+    "org": "Lab of Future",
+    "kind": "work",
+    "kindLabel": "WORK",
+    "state": "",
+    "inset": true,
+    "coord": "13.0827° N 80.2707° E"
+  },
+  {
+    "num": "03",
+    "place": "SIEGEN",
+    "cc": "DE",
+    "lat": 50.8749,
+    "lon": 8.0243,
+    "when": "MMM YYYY — NOW",
+    "role": "M.Sc. — Computer Science",
+    "org": "Universität Siegen",
+    "kind": "study",
+    "kindLabel": "STUDY",
+    "state": "is-now",
+    "inset": false,
+    "coord": "50.8749° N 8.0243° E"
+  }
+]

@@ -176,7 +176,9 @@
   .tab[aria-current="page"] .tab__n{opacity:.85;}
 
   /* ── screens ── */
-  .screen{overflow-x:hidden;}
+  /* no scrollport fade (07-screens.css): the header base above and the
+     nav bar are opaque, and the screens scroll under them by design. */
+  .screen{overflow-x:hidden;-webkit-mask-image:none;mask-image:none;}
 
   /* ── home ────────────────────────────────────────────────────────────
      Column flex with align-items:flex-start does NOT stretch children,
@@ -254,10 +256,27 @@
   .statline{gap:12px 26px;}
   .statline dd{font-size:13.5px;}
 
+  /* where: the map goes full-bleed like the home field, because at 354px
+     inside the gutters a 16:9 frame is 199px tall and the inset is a
+     thumbnail. The list becomes one column and carries everything; inset
+     markers keep their number and drop the name, which would not fit in
+     a 120px inset and is printed in full directly underneath (the
+     container query in 09-about.css does that part). */
+  .jny{margin-top:32px;}
+  .jny__panel{margin-inline:calc(var(--pad-x) * -1);}
+  .jny__cap,.jny__meta{padding-inline:var(--pad-x);}
+  .jm__frame{border-inline:0;clip-path:polygon(0 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%);}
+  .jm__lbl{font-size:11px;}
+  .jm__icap{padding:3px 0 0 5px;font-size:9px;letter-spacing:.04em;}
+  .jm__icap-at{display:none;}
+  .jny__list{grid-template-columns:minmax(0,1fr);gap:14px;margin-top:16px;}
+  .jny__pl{font-size:15px;}
+  .jny__role{font-size:13px;}
+
   /* ── work ────────────────────────────────────────────────────────────
      Back onto the tokens: the base rule hardcodes 106/94px, which cannot
      track a header that is now 72px. */
-  .screen--work{padding-block:var(--hdr-h) var(--ftr-h);}
+  .screen--work{--scr-t:var(--hdr-h);--scr-b:var(--ftr-h);}
   .projects{gap:8px;}
   /* The card has to answer "and what came of it" at rest. Six taps to
      read six outcomes is six taps too many on a phone, so tech/year —
@@ -381,12 +400,22 @@
   .slab-lines--c .slab{font-size:clamp(17px,2.4vw,23px);}
   .contact{flex:1 1 46%;margin-top:2px;gap:8px;}
   .info__note{flex:0 0 100%;margin-top:12px;}
+
+  /* WHERE: the map beside its list, not above it — stacked, the panel
+     alone is taller than this screen's box. */
+  .jny{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:0 20px;align-items:start;}
+  .jny > .eyebrow{grid-column:1/-1;}
+  .jny__panel{margin-inline:0;}
+  .jny__cap,.jny__meta{padding-inline:0;}
+  .jm__frame{border-inline:2px solid var(--accent);}
+  .jny__list{margin-top:0;gap:10px;}
 }
 
 /* Narrow AND short is zoomed, not a phone on its side: one column, and no
    field. It is aria-hidden ornament, and at this size it is only in the way. */
 @media (max-width:559px) and (max-height:480px){
   .lat{display:none;}
+  .jny__panel{display:none;}
   .home__copy{margin-top:0;}
 }
 
